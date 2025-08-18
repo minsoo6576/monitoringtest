@@ -1,5 +1,6 @@
 "use client";
 
+import RightSidebar from "@/components/RightSidebar";
 export default function DashboardPage() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-100">
@@ -9,7 +10,9 @@ export default function DashboardPage() {
         <div className="flex items-center gap-6 text-sm text-gray-600">
           <span>2025년 08월 22일 14시 30분</span>
           <span>기온 35.3° 습도 46% 풍속 0.9m/s</span>
-          <button className="px-3 py-1 rounded-md bg-gray-100">다크 모드</button>
+          <button className="px-3 py-1 rounded-md bg-gray-100">
+            다크 모드
+          </button>
           <button className="px-3 py-1 rounded-md bg-gray-100">로그인</button>
         </div>
       </header>
@@ -34,19 +37,7 @@ export default function DashboardPage() {
         </main>
 
         {/* 우측 사이드바 */}
-        <aside className="w-80 bg-white border-l shadow-md p-4 space-y-4 overflow-y-auto">
-          <h2 className="font-semibold">실시간 주의알림</h2>
-          <ul className="text-sm space-y-2">
-            <li className="text-red-500">[주의] O₂ 주의발생</li>
-            <li className="text-orange-500">[경고] 가스농도 초과</li>
-          </ul>
-          <div className="mt-6">
-            <h3 className="font-semibold">안전수칙 가이드</h3>
-            <div className="text-xs text-gray-500">
-              대구광역시, 폭염 속 건설현장 특별점검 실시
-            </div>
-          </div>
-        </aside>
+        <RightSidebar />
       </div>
     </div>
   );
