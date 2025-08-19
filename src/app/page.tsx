@@ -1,44 +1,79 @@
+// src/app/page.tsx
 "use client";
 
+import { useState } from "react";
+import Header from "@/components/Header";
+import LeftSidebar from "@/components/LeftSidebar";
 import RightSidebar from "@/components/RightSidebar";
-export default function DashboardPage() {
+import BottomSidebar from "@/components/BottomSidebar";
+import MainContainer from "@/components/MainContainer";
+
+export default function PageLayout({ children }: { children: React.ReactNode }) {
+  const [leftOpen, setLeftOpen] = useState(true);
+  const [rightOpen, setRightOpen] = useState(true);
+  const [bottomOpen, setBottomOpen] = useState(false);
+
+  // 사이드/바텀 사이즈 (컴포넌트 실제 폭/높이와 일치)
+  const LEFT_W = 380;      // LeftSidebar 전체 폭
+  const RIGHT_W = 380;     // RightSidebar 패널 폭 (panelWidthPx와 동일)
+  const BOTTOM_H = 280;    // BottomSidebar 높이
+  const HEADER_H = 80;     // 고정 헤더 h-20
+
   return (
-    <div className="min-h-screen flex flex-col bg-gray-100">
-      {/* 헤더 */}
-      <header className="h-16 bg-white shadow px-6 flex items-center justify-between">
-        <div className="font-semibold text-gray-700">라이브모드</div>
-        <div className="flex items-center gap-6 text-sm text-gray-600">
-          <span>2025년 08월 22일 14시 30분</span>
-          <span>기온 35.3° 습도 46% 풍속 0.9m/s</span>
-          <button className="px-3 py-1 rounded-md bg-gray-100">
-            다크 모드
-          </button>
-          <button className="px-3 py-1 rounded-md bg-gray-100">로그인</button>
+    <>
+      <Header />
+
+      {/* 헤더(80px) 아래 화면 전체 영역 */}
+      <div className="h-[calc(100vh-80px)] overflow-hidden">
+        {/* 좌 스페이서 / 본문 / 우 스페이서 (사이드바와 겹침 방지) */}
+        <div className="flex h-full">
+          {/* 좌측 스페이서 */}
+          <div
+            className="shrink-0 transition-[width] duration-300"
+            style={{ width: leftOpen ? LEFT_W : 0 }}
+          />
+
+          {/* 본문 */}
+          <div className="relative flex-1 overflow-hidden">
+            <MainContainer
+              leftPad={0}                        // 스페이서로 비움 → 0
+              rightPad={0}                       // 스페이서로 비움 → 0
+              bottomPad={bottomOpen ? BOTTOM_H : 0} // 바텀 패널 열릴 때만 여유
+              bgSrc="/mapex.png"
+              objectPosition="center"
+            >
+              {children}
+            </MainContainer>
+          </div>
+
+          {/* 우측 스페이서 */}
+          <div
+            className="shrink-0 transition-[width] duration-300"
+            style={{ width: rightOpen ? RIGHT_W : 0 }}
+          />
         </div>
-      </header>
 
-      {/* 본문 */}
-      <div className="flex flex-1">
-        {/* 좌측 사이드바 */}
-        <aside className="w-72 bg-white border-r shadow-md p-4 space-y-4 overflow-y-auto">
-          <h2 className="font-semibold">대구교 수로공사</h2>
-          <div className="space-y-4">
-            <div className="rounded-lg border p-4 bg-white">현장 카드 1</div>
-            <div className="rounded-lg border p-4 bg-white">현장 카드 2</div>
-          </div>
-        </aside>
+        {/* 고정 사이드바/바텀바 */}
+        <LeftSidebar
+          isOpen={leftOpen}
+          onToggle={() => setLeftOpen(v => !v)}
+          // LeftSidebar가 width prop 받으면: widthPx={LEFT_W}
+        />
 
-        {/* 중앙 지도 + 하단 현황판 */}
-        <main className="flex-1 flex flex-col">
-          <div className="flex-1 bg-gray-200">지도 들어갈 자리</div>
-          <div className="h-40 bg-white border-t shadow-md p-4">
-            전체 현장 알림 / 통계 그래프
-          </div>
-        </main>
+        <RightSidebar
+          isOpen={rightOpen}
+          onToggle={() => setRightOpen(v => !v)}
+          panelWidthPx={RIGHT_W}   // 패널 폭 동기화
+          topOffsetPx={HEADER_H}   // 헤더 높이만큼 보정
+          // cardWidthPx/gutterPx는 컴포넌트 기본값 사용
+        />
 
-        {/* 우측 사이드바 */}
-        <RightSidebar />
+        <BottomSidebar
+          isOpen={bottomOpen}
+          onToggle={() => setBottomOpen(v => !v)}
+          heightPx={BOTTOM_H}
+        />
       </div>
-    </div>
+    </>
   );
 }

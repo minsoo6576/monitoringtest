@@ -6,14 +6,10 @@ export const metadata: Metadata = {
   description: "실시간 모니터링 웹 앱",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
-      <body className="min-h-screen bg-gray-100">
+      <body className="pt-20 h-screen overflow-hidden bg-gray-100 antialiased">
         {children}
       </body>
     </html>
