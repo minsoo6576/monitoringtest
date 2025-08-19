@@ -8,16 +8,20 @@ import RightSidebar from "@/components/RightSidebar";
 import BottomSidebar from "@/components/BottomSidebar";
 import MainContainer from "@/components/MainContainer";
 
-export default function PageLayout({ children }: { children: React.ReactNode }) {
+export default function PageLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [leftOpen, setLeftOpen] = useState(true);
   const [rightOpen, setRightOpen] = useState(true);
   const [bottomOpen, setBottomOpen] = useState(false);
 
   // 사이드/바텀 사이즈 (컴포넌트 실제 폭/높이와 일치)
-  const LEFT_W = 380;      // LeftSidebar 전체 폭
-  const RIGHT_W = 380;     // RightSidebar 패널 폭 (panelWidthPx와 동일)
-  const BOTTOM_H = 280;    // BottomSidebar 높이
-  const HEADER_H = 80;     // 고정 헤더 h-20
+  const LEFT_W = 300; // LeftSidebar 전체 폭 (유지)
+  const RIGHT_W = 300; // ✅ RightSidebar 패널 폭 (카드260 + 양쪽 gutter 15*2)
+  const BOTTOM_H = 280; // BottomSidebar 높이
+  const HEADER_H = 80; // 고정 헤더 h-20
 
   return (
     <>
@@ -36,9 +40,10 @@ export default function PageLayout({ children }: { children: React.ReactNode }) 
           {/* 본문 */}
           <div className="relative flex-1 overflow-hidden">
             <MainContainer
-              leftPad={0}                        // 스페이서로 비움 → 0
-              rightPad={0}                       // 스페이서로 비움 → 0
-              bottomPad={bottomOpen ? BOTTOM_H : 0} // 바텀 패널 열릴 때만 여유
+              leftPad={0}
+              rightPad={0}
+              bottomPad={bottomOpen ? BOTTOM_H : 0} // ✅ 열릴 때만 높이 반영
+              headerOffsetPx={HEADER_H} // ✅ 헤더 높이 전달
               bgSrc="/mapex.png"
               objectPosition="center"
             >
@@ -56,21 +61,19 @@ export default function PageLayout({ children }: { children: React.ReactNode }) 
         {/* 고정 사이드바/바텀바 */}
         <LeftSidebar
           isOpen={leftOpen}
-          onToggle={() => setLeftOpen(v => !v)}
-          // LeftSidebar가 width prop 받으면: widthPx={LEFT_W}
+          onToggle={() => setLeftOpen((v) => !v)}
         />
 
         <RightSidebar
           isOpen={rightOpen}
-          onToggle={() => setRightOpen(v => !v)}
-          panelWidthPx={RIGHT_W}   // 패널 폭 동기화
-          topOffsetPx={HEADER_H}   // 헤더 높이만큼 보정
-          // cardWidthPx/gutterPx는 컴포넌트 기본값 사용
+          onToggle={() => setRightOpen((v) => !v)}
+          panelWidthPx={RIGHT_W} // ✅ 패널 폭 동기화
+          topOffsetPx={HEADER_H} // 헤더 높이 보정
         />
 
         <BottomSidebar
           isOpen={bottomOpen}
-          onToggle={() => setBottomOpen(v => !v)}
+          onToggle={() => setBottomOpen((v) => !v)}
           heightPx={BOTTOM_H}
         />
       </div>
