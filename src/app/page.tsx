@@ -18,10 +18,14 @@ export default function PageLayout({
   const [bottomOpen, setBottomOpen] = useState(false);
 
   // 사이드/바텀 사이즈 (컴포넌트 실제 폭/높이와 일치)
-  const LEFT_W = 300; // LeftSidebar 전체 폭 (유지)
-  const RIGHT_W = 300; // ✅ RightSidebar 패널 폭 (카드260 + 양쪽 gutter 15*2)
-  const BOTTOM_H = 280; // BottomSidebar 높이
-  const HEADER_H = 80; // 고정 헤더 h-20
+  const LEFT_W = 300;
+  const RIGHT_W = 300;
+  const BOTTOM_H = 280;
+  const HEADER_H = 80;
+
+  // ✅ 추가: 현재 열린 사이드바 폭
+  const leftInset = leftOpen ? LEFT_W : 0;
+  const rightInset = rightOpen ? RIGHT_W : 0;
 
   return (
     <>
@@ -42,8 +46,8 @@ export default function PageLayout({
             <MainContainer
               leftPad={0}
               rightPad={0}
-              bottomPad={bottomOpen ? BOTTOM_H : 0} // ✅ 열릴 때만 높이 반영
-              headerOffsetPx={HEADER_H} // ✅ 헤더 높이 전달
+              bottomPad={bottomOpen ? BOTTOM_H : 0}
+              headerOffsetPx={HEADER_H}
               bgSrc="/mapex.png"
               objectPosition="center"
             >
@@ -67,14 +71,17 @@ export default function PageLayout({
         <RightSidebar
           isOpen={rightOpen}
           onToggle={() => setRightOpen((v) => !v)}
-          panelWidthPx={RIGHT_W} // ✅ 패널 폭 동기화
-          topOffsetPx={HEADER_H} // 헤더 높이 보정
+          panelWidthPx={RIGHT_W}
+          topOffsetPx={HEADER_H}
         />
 
         <BottomSidebar
           isOpen={bottomOpen}
           onToggle={() => setBottomOpen((v) => !v)}
           heightPx={BOTTOM_H}
+          // ✅ 추가: 열린 사이드바 폭 전달(좌/우 인셋)
+          insetLeftPx={leftInset}
+          insetRightPx={rightInset}
         />
       </div>
     </>

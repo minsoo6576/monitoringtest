@@ -1,26 +1,23 @@
-// components/BottomSidebar.tsx
 "use client";
 
 export default function BottomSidebar({
   isOpen,
   onToggle,
   heightPx = 280,
-  inline = false,
+  insetLeftPx = 0, // ← 좌측 사이드바가 차지한 폭
+  insetRightPx = 0, // ← 우측 사이드바가 차지한 폭
 }: {
   isOpen: boolean;
   onToggle: () => void;
   heightPx?: number;
-  inline?: boolean;
+  insetLeftPx?: number;
+  insetRightPx?: number;
 }) {
-  if (inline) {
-    return (
-      <div className="h-full w-full">
-        <div className="mx-auto flex w-[400px] h-[188px] px-[15px] py-5 flex-col items-start gap-[15px] rounded-[5px] border border-[#EEE] bg-white">
-          {/* 카드 내용 */}
-        </div>
-      </div>
-    );
-  }
+  // 남은 중앙 영역의 가로 중앙 (토글 버튼 위치)
+  const centerX = `calc(${insetLeftPx}px + (100vw - ${
+    insetLeftPx + insetRightPx
+  }px)/2)`;
+
   return (
     <>
       {/* 모바일 오버레이 */}
@@ -34,16 +31,18 @@ export default function BottomSidebar({
         }`}
       />
 
-      {/* 패널 */}
+      {/* ✅ 좌/우 인셋을 주어 중앙 영역 폭만큼만 차지 */}
       <aside
-        className={`fixed left-0 right-0 bottom-0 z-40 border-t bg-white
+        className={`fixed bottom-0 z-40 border-t bg-white
                     transition-transform duration-300 will-change-transform
-                    ${isOpen ? "translate-y-0" : "translate-y-full"}`}
-        style={{ height: heightPx }} // ✅ 동적 높이는 style로
+                    ${isOpen ? "translate-y-0" : "translate-y-full"}
+                    transition-[left,right,transform]`}
+        style={{ height: heightPx, left: insetLeftPx, right: insetRightPx }}
       >
         <div className="h-full overflow-y-auto p-4">
-          <div className="mx-auto">
-            <div className="flex w-[400px] h-[188px] px-[15px] py-5 flex-col items-start gap-[15px] rounded-[5px] border border-[#EEE] bg-white">
+          <div className="mx-auto max-w-[1200px]">
+            {/* ↓ 여긴 너가 원하는 카드/그리드로 자유 구성 */}
+            <div className="flex w-full max-w-[460px] px-[15px] py-5 flex-col items-start gap-[15px] rounded-[5px] border border-[#EEE] bg-white">
               <div className="text-sm font-semibold text-gray-800">
                 하단 패널
               </div>
@@ -61,17 +60,15 @@ export default function BottomSidebar({
         </div>
       </aside>
 
-      {/* 바깥 토글 버튼 (패널 바깥 위 중앙) */}
+      {/* 중앙 영역의 정확한 중앙에 토글 버튼 */}
       <button
         type="button"
         onClick={onToggle}
         aria-label={isOpen ? "하단 메뉴 닫기" : "하단 메뉴 열기"}
-        className="fixed z-50 left-1/2 -translate-x-1/2 
-                   transition-[bottom,transform] duration-300
-                   flex h-8 w-16 items-center justify-center
-                   rounded-t-full border border-gray-200 bg-white shadow
+        className="fixed z-50 -translate-x-1/2 transition-[bottom,left,transform] duration-300
+                   flex h-8 w-16 items-center justify-center rounded-t-full border border-gray-200 bg-white shadow
                    hover:bg-gray-50 active:scale-95"
-        style={{ bottom: isOpen ? heightPx : 0 }} // ✅ OK
+        style={{ left: centerX, bottom: isOpen ? heightPx : 0 }}
       >
         <svg
           viewBox="0 0 24 24"
