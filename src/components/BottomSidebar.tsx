@@ -1,22 +1,49 @@
+// src/components/BottomSidebar.tsx
 "use client";
+import NoticeWarnTable from "@/components/LiveAlarm/NoticeWarnTable";
+type Tone = "warn" | "danger";
+type LogItem = { text: string; time?: string; tone?: Tone };
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h4 className="text-sm font-semibold text-gray-700">{children}</h4>;
+}
+
+function Card({ className = "", children }: { className?: string; children: React.ReactNode }) {
+  return (
+    <div className={`flex flex-col items-start rounded-[0.3125rem] border border-[#EEE] bg-white ${className}`}>
+      {children}
+    </div>
+  );
+}
 
 export default function BottomSidebar({
   isOpen,
   onToggle,
+  // 기존 호출 호환 위해 px 입력도 지원
+  heightRem,
   heightPx = 280,
-  insetLeftPx = 0, // ← 좌측 사이드바가 차지한 폭
-  insetRightPx = 0, // ← 우측 사이드바가 차지한 폭
+  insetLeftRem = 0,
+  insetRightRem = 0,
 }: {
   isOpen: boolean;
   onToggle: () => void;
+  heightRem?: number;
   heightPx?: number;
-  insetLeftPx?: number;
-  insetRightPx?: number;
+  insetLeftRem?: number;
+  insetRightRem?: number;
 }) {
-  // 남은 중앙 영역의 가로 중앙 (토글 버튼 위치)
-  const centerX = `calc(${insetLeftPx}px + (100vw - ${
-    insetLeftPx + insetRightPx
-  }px)/2)`;
+  const resolvedHeightRem = typeof heightRem === "number" ? heightRem : heightPx / 16;
+
+  // 토글 버튼 중앙 정렬 (사이드 inset 고려)
+  const centerX = `calc(${insetLeftRem}rem + (100vw - ${insetLeftRem + insetRightRem}rem)/2)`;
+
+  // 샘플 데이터 (연동 시 교체)
+  const alarms: LogItem[] = [
+    { text: "test01 O₂ 주의발생", time: "10:31:21", tone: "warn" },
+    { text: "H₂S 감지", time: "10:29:10", tone: "warn" },
+    { text: "추가 데이터 1", time: "10:19:00", tone: "danger" },
+    { text: "추가 데이터 2", time: "10:18:00", tone: "warn" },
+  ];
 
   return (
     <>
@@ -24,43 +51,55 @@ export default function BottomSidebar({
       <div
         onClick={onToggle}
         className={`fixed inset-0 bg-black/30 lg:hidden transition-opacity duration-300
-        ${
-          isOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
-        }`}
+        ${isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
       />
 
-      {/* ✅ 좌/우 인셋을 주어 중앙 영역 폭만큼만 차지 */}
+      {/* 패널 */}
       <aside
         className={`fixed bottom-0 z-40 border-t bg-white
                     transition-transform duration-300 will-change-transform
                     ${isOpen ? "translate-y-0" : "translate-y-full"}
                     transition-[left,right,transform]`}
-        style={{ height: heightPx, left: insetLeftPx, right: insetRightPx }}
+        style={{
+          height: `${resolvedHeightRem}rem`,
+          left: `${insetLeftRem}rem`,
+          right: `${insetRightRem}rem`,
+        }}
       >
-        <div className="h-full overflow-y-auto p-4">
-          <div className="mx-auto max-w-[1200px]">
-            {/* ↓ 여긴 너가 원하는 카드/그리드로 자유 구성 */}
-            <div className="flex w-full max-w-[460px] px-[15px] py-5 flex-col items-start gap-[15px] rounded-[5px] border border-[#EEE] bg-white">
-              <div className="text-sm font-semibold text-gray-800">
-                하단 패널
-              </div>
-              <p className="text-sm text-gray-700">
-                대구교 수로공사 · 일일 리포트 / 공정률 40%
-              </p>
-              <ul className="grid grid-cols-2 gap-2 text-xs text-gray-600">
-                <li>안전점검: 완료</li>
-                <li>자재반입: 진행중</li>
-                <li>장비가동: 정상</li>
-                <li>기상: 폭염주의</li>
-              </ul>
+        <div className="h-full py-3">
+          {/* 전체 폭 사용: 좌우가 비지 않도록 w-full + justify-between */}
+          <div className="h-full w-full px-4">
+            <div className="flex h-[11.75rem] w-full items-stretch justify-between gap-4">
+              {/* 1) 전체현장 실시간 알림 (25rem = 400px) */}
+              <Card className="w-[25rem] h-full px-4 py-4">
+                <SectionTitle>전체현장 실시간 알림</SectionTitle>
+               <NoticeWarnTable items={alarms} />
+              </Card>
+
+              {/* 2) 원그래프 (25rem = 400px) */}
+              <Card className="w-[25rem] h-full px-4 py-4">
+                <SectionTitle>전체 현장현황</SectionTitle>
+              </Card>
+
+              {/* 3) 8개 지표 카드: 4×2 고정 그리드 (각 7.25rem = 116px) */}
+
+                <div className="mt-3 grid grid-cols-4 gap-3">
+                  {Array.from({ length: 8 }).map((_, i) => (
+                    <div
+                      key={i}
+                      className="w-[7.25rem] h-[4.75rem] rounded-md border border-gray-200 bg-white px-3 py-2 flex flex-col justify-center"
+                    >
+                      <div className="text-[0.75rem] text-gray-500">지표 {i + 1}</div>
+                      <div className="text-base font-semibold text-gray-900">값</div>
+                    </div>
+                  ))}
+                </div>
             </div>
           </div>
         </div>
       </aside>
 
-      {/* 중앙 영역의 정확한 중앙에 토글 버튼 */}
+      {/* 토글 버튼 */}
       <button
         type="button"
         onClick={onToggle}
@@ -68,13 +107,11 @@ export default function BottomSidebar({
         className="fixed z-50 -translate-x-1/2 transition-[bottom,left,transform] duration-300
                    flex h-8 w-16 items-center justify-center rounded-t-full border border-gray-200 bg-white shadow
                    hover:bg-gray-50 active:scale-95"
-        style={{ left: centerX, bottom: isOpen ? heightPx : 0 }}
+        style={{ left: centerX, bottom: isOpen ? `${resolvedHeightRem}rem` : 0 }}
       >
         <svg
           viewBox="0 0 24 24"
-          className={`h-5 w-5 transition-transform ${
-            isOpen ? "rotate-90" : "-rotate-90"
-          }`}
+          className={`h-5 w-5 transition-transform ${isOpen ? "rotate-90" : "-rotate-90"}`}
           aria-hidden="true"
         >
           <path
@@ -90,3 +127,4 @@ export default function BottomSidebar({
     </>
   );
 }
+

@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/table";
 
 type Tone =  "warn" | "danger";
-export type NoticeItem = { text: string; time?: string; tone?: Tone };
+export type DangerItem = { text: string; time?: string; tone?: Tone };
 
 function Chip({ tone = "warn", children }: { tone?: Tone; children: React.ReactNode }) {
   const map: Record<Tone, string> = {
@@ -19,7 +19,7 @@ function Chip({ tone = "warn", children }: { tone?: Tone; children: React.ReactN
   );
 }
 
-export default function NoticeTable({ items }: { items: NoticeItem[] }) {
+export default function DangerTable({ items }: { items: DangerItem[] }) {
   return (
     <Table aria-label="실시간 경고알림">
       <TableBody>
