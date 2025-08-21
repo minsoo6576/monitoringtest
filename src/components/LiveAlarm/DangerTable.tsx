@@ -13,7 +13,9 @@ function Chip({ tone = "warn", children }: { tone?: Tone; children: React.ReactN
     danger: "bg-red-100 text-red-700",
   };
   return (
-    <span className={`inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium ${map[tone]}`}>
+    <span
+      className={`inline-flex items-center rounded px-[0.5rem] py-[0.167rem] text-[10px] font-medium ${map[tone]}`}
+    >
       {children}
     </span>
   );
@@ -25,16 +27,20 @@ export default function DangerTable({ items }: { items: DangerItem[] }) {
       <TableBody>
         {items.length === 0 ? (
           <TableRow>
-            <TableCell colSpan={3} className="py-6 text-center text-xs text-gray-400">
+            <TableCell colSpan={3} className="py-[2rem] text-center text-[1rem] text-gray-400">
               데이터가 없습니다.
             </TableCell>
           </TableRow>
         ) : (
           items.map((n, i) => (
-            <TableRow key={i} >
-              <TableCell><Chip tone={n.tone ?? "danger"}>주의</Chip></TableCell>
+            <TableRow key={i}>
+              <TableCell>
+                <Chip tone={n.tone ?? "danger"}>주의</Chip>
+              </TableCell>
               <TableCell className="max-w-[180px] truncate">{n.text}</TableCell>
-              <TableCell className="text-right text-xs text-gray-500">{n.time ?? "-"}</TableCell>
+              <TableCell className="text-right text-[1rem] text-gray-500">
+                {n.time ?? "-"}
+              </TableCell>
             </TableRow>
           ))
         )}

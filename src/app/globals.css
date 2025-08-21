@@ -12,11 +12,16 @@ body {
   height: 100%;
   background: #f5f6fa; /* 밝은 회색 */
   color: #111827; /* 텍스트: gray-900 */
+  font-family: 'Pretendard' ;
+  font-style : 'normal';
+  letter-spacing : -0.025em;
+  font-size : 12px;
 }
 
 /* Next.js가 자동 주입하는 body 스타일과 충돌 방지 */
 body {
   margin: 0;
+  font-size: 1rem;
 }
 
 @layer base {

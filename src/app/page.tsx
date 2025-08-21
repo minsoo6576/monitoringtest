@@ -1,4 +1,3 @@
-// src/app/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -13,11 +12,11 @@ export default function PageLayout({ children }: { children: React.ReactNode }) 
   const [rightOpen, setRightOpen] = useState(true);
   const [bottomOpen, setBottomOpen] = useState(false);
 
-  // 🔧 rem 기준 사이드/바텀/헤더 사이즈
-  const LEFT_W_REM = 18.75;   // 300px
-  const RIGHT_W_REM = 18.75;  // 300px
-  const BOTTOM_H_REM = 13.125;  // 210px
-  const HEADER_H_REM = 5;     // 80px
+  // 🔧 rem 기준 사이드/바텀/헤더 사이즈 (12px root 기준으로 환산)
+  const LEFT_W_REM = 25;       // 300px ÷ 12 = 25rem
+  const RIGHT_W_REM = 25;      // 300px ÷ 12 = 25rem
+  const BOTTOM_H_REM = 17.5;   // 210px ÷ 12 = 17.5rem
+  const HEADER_H_REM = 6.667;  // 80px ÷ 12 ≈ 6.667rem
 
   // ✅ 현재 열린 사이드바에 따라 하단바 인셋을 rem 값으로 계산
   const insetLeftRem = leftOpen ? LEFT_W_REM : 0;
@@ -27,7 +26,7 @@ export default function PageLayout({ children }: { children: React.ReactNode }) 
     <>
       <Header />
 
-      {/* 헤더(5rem) 아래 영역 */}
+      {/* 헤더(6.667rem) 아래 영역 */}
       <div className="overflow-hidden" style={{ height: `calc(100vh - ${HEADER_H_REM}rem)` }}>
         <div className="flex h-full">
           {/* 좌측 스페이서 */}
@@ -60,8 +59,8 @@ export default function PageLayout({ children }: { children: React.ReactNode }) 
         <RightSidebar
           isOpen={rightOpen}
           onToggle={() => setRightOpen(v => !v)}
-          panelWidthPx={RIGHT_W_REM * 16} 
-          topOffsetPx={HEADER_H_REM * 16}
+          panelWidthPx={RIGHT_W_REM * 12}   // rem 기준 변경 → px 환산도 12배
+          topOffsetPx={HEADER_H_REM * 12}   // rem 기준 변경 → px 환산도 12배
         />
         <BottomSidebar
           isOpen={bottomOpen}

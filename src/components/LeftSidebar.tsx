@@ -82,7 +82,6 @@ const FIELDS: FieldListProps[] = [
   }
 ];
 
-
 type LeftSidebarProps = {
   isOpen: boolean;
   onToggle: () => void;
@@ -105,12 +104,12 @@ export default function LeftSidebar({ isOpen, onToggle }: LeftSidebarProps) {
       />
 
       <aside
-        className={`fixed left-0 top-[5rem] z-40 h-[calc(100vh-5rem)] w-[18.75rem] border-r bg-white
+        className={`fixed left-0 top-[6.667rem] z-40 h-[calc(100vh-6.667rem)] w-[25rem] border-r bg-white
         transition-transform duration-300 will-change-transform
         ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
       >
-        <div className="h-full overflow-y-auto p-4">
-         <FieldListGroup items={FIELDS} />
+        <div className="h-full overflow-y-auto p-[1.333rem]">
+          <FieldListGroup items={FIELDS} />
         </div>
       </aside>
 
@@ -118,16 +117,16 @@ export default function LeftSidebar({ isOpen, onToggle }: LeftSidebarProps) {
         type="button"
         onClick={onToggle}
         aria-label={isOpen ? "왼쪽 메뉴 닫기" : "왼쪽 메뉴 열기"}
-        className={`fixed z-50 top-[calc(50vh+2.5rem)] -translate-y-1/2
+        className={`fixed z-50 top-[calc(50vh+3.333rem)] -translate-y-1/2
                     transition-[left,transform] duration-300
-                    ${isOpen ? "left-[17.5rem]" : "left-0"}
-                    flex h-12 w-8 items-center justify-center
+                    ${isOpen ? "left-[23.333rem]" : "left-0"}
+                    flex h-[4rem] w-[2.667rem] items-center justify-center
                     rounded-r-full border border-gray-200 bg-white shadow
                     hover:bg-gray-50 active:scale-95`}
       >
         <svg
           viewBox="0 0 24 24"
-          className={`h-5 w-5 transition-transform ${isOpen ? "" : "rotate-180"}`}
+          className={`h-[1.667rem] w-[1.667rem] transition-transform ${isOpen ? "" : "rotate-180"}`}
           aria-hidden="true"
         >
           <path

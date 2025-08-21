@@ -1,4 +1,3 @@
-// src/components/FieldLists/FieldList.tsx
 "use client";
 import React from "react";
 import Ring from "@/components/ui/gauges/Ring";
@@ -35,15 +34,15 @@ export function FieldList({
   temperatureText, humidityText, gauges, counts, progress, updatedAtText,
 }: FieldListProps) {
   const tempBoxCls =
-    variant === "primary" ? "rounded-lg bg-blue-600 px-3 py-3 text-white"
-                          : "rounded-lg bg-slate-700 px-3 py-3 text-white";
+    variant === "primary" ? "rounded-lg bg-blue-600 px-[1rem] py-[1rem] text-white"
+                          : "rounded-lg bg-slate-700 px-[1rem] py-[1rem] text-white";
   const humiBoxCls =
-    variant === "primary" ? "rounded-lg bg-blue-50 px-3 py-3 text-blue-700"
-                          : "rounded-lg bg-slate-200 px-3 py-3 text-slate-800";
+    variant === "primary" ? "rounded-lg bg-blue-50 px-[1rem] py-[1rem] text-blue-700"
+                          : "rounded-lg bg-slate-200 px-[1rem] py-[1rem] text-slate-800";
 
   return (
     <div className="w-full">
-      <div className="rounded-2xl border border-gray-200 bg-white shadow-sm p-4">
+      <div className="rounded-2xl border border-gray-200 bg-white shadow-sm p-[1.333rem]">
         <div className="flex items-start justify-between">
           <div className="font-semibold text-gray-900">{name}</div>
           <span className={cn("inline-flex items-center rounded-md px-2 py-1 text-xs font-medium",
@@ -52,7 +51,7 @@ export function FieldList({
           </span>
         </div>
 
-        <div className="mt-4 grid grid-cols-2 gap-3">
+        <div className="mt-[1.333rem] grid grid-cols-2 gap-[1rem]">
           <div className={tempBoxCls}>
             <div className="text-xs/none opacity-90">현장온도</div>
             <div className="text-xl font-semibold">{temperatureText}</div>
@@ -63,14 +62,14 @@ export function FieldList({
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-4 gap-3">
+        <div className="mt-[1.667rem] grid grid-cols-4 gap-[1rem]">
           {gauges.map(g => (
             <Ring key={g.label} label={g.label} unit={g.unit} value={g.value}
                   percent={g.percent} current={g.current} total={g.total} min={g.min} max={g.max} />
           ))}
         </div>
 
-        <hr className="my-4 border-gray-200" />
+        <hr className="my-[1.333rem] border-gray-200" />
 
         <div className="space-y-3 text-sm">
           {counts.map(c => (
@@ -81,7 +80,7 @@ export function FieldList({
           ))}
         </div>
 
-        <hr className="my-4 border-gray-200" />
+        <hr className="my-[1.333rem] border-gray-200" />
 
         <div className="space-y-3">
           {progress.map(p => (
@@ -92,7 +91,7 @@ export function FieldList({
         </div>
 
         {updatedAtText && (
-          <p className="mt-3 text-right text-[0.75rem] text-gray-500">{updatedAtText}</p>
+          <p className="mt-3 text-right text-[1rem] text-gray-500">{updatedAtText}</p>
         )}
       </div>
     </div>
@@ -102,7 +101,7 @@ export function FieldList({
 /* ===== 여러 카드 묶음 ===== */
 export function FieldListGroup({ items }: { items: FieldListProps[] }) {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-[1.333rem]">
       {items.map(item => <FieldList key={item.id ?? item.name} {...item} />)}
     </div>
   );
