@@ -27,7 +27,10 @@ export default function PageLayout({ children }: { children: React.ReactNode }) 
       <Header />
 
       {/* 헤더(6.667rem) 아래 영역 */}
-      <div className="overflow-hidden" style={{ height: `calc(100vh - ${HEADER_H_REM}rem)` }}>
+      <div
+  className="overflow-hidden bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100"
+  style={{ height: `calc(100vh - ${HEADER_H_REM}rem)` }}
+>
         <div className="flex h-full">
           {/* 좌측 스페이서 */}
           <div
@@ -35,7 +38,7 @@ export default function PageLayout({ children }: { children: React.ReactNode }) 
             style={{ width: leftOpen ? `${LEFT_W_REM}rem` : "0rem" }}
           />
           {/* 본문 */}
-          <div className="relative flex-1 overflow-hidden">
+         <div className="relative flex-1 overflow-hidden bg-white dark:bg-gray-900">
             <MainContainer
               leftPad={0}
               rightPad={0}

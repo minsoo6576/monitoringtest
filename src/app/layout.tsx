@@ -1,6 +1,6 @@
-// src/app/layout.tsx
 import "./globals.css";
 import type { Metadata } from "next";
+import { ThemeProvider } from "@/components/ui/theme-provider";
 
 export const metadata: Metadata = {
   title: "관제 모니터링 시스템",
@@ -9,9 +9,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       <body className="pt-[6.667rem] h-screen overflow-hidden bg-gray-100 antialiased">
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -8,7 +8,7 @@
 }
 
 html,
-body {
+body :root {
   height: 100%;
   background: #f5f6fa; /* 밝은 회색 */
   color: #111827; /* 텍스트: gray-900 */

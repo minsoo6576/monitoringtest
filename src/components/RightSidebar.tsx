@@ -6,7 +6,6 @@ import WarnTable from "@/components/LiveAlarm/WarnTable";
 import DangerTable from "@/components/LiveAlarm/DangerTable";
 import NoticeTable from "@/components/LiveAlarm/NoticeTable";
 import WorkTable from "@/components/LiveAlarm/WorkTable";
-
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 
 type Tone = "warn" | "danger";
@@ -73,78 +72,78 @@ export default function RightSidebar({
 
       {/* 오른쪽 고정 패널 */}
       <aside
-        className={`fixed right-0 z-40 border-l bg-white transition-transform duration-300 will-change-transform ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed right-0 z-40 border-l bg-white transition-transform duration-300 will-change-transform
+                    ${isOpen ? "translate-x-0" : "translate-x-full"}
+                    dark:bg-[#1E1E20] dark:border-[#222]`}
         style={{
           top: `${topOffsetRem}rem`,
           height: `calc(100vh - ${topOffsetRem}rem)`,
           width: `${asideWidth}rem`,
         }}
       >
-        {/* 내부 스크롤 + gutter (필요시 padding 추가) */}
-        <div>
+        {/* 내부 스크롤 + gutter */}
+        <div className="max-h-full overflow-y-auto py-[1.25rem]">
           {/* 카드 */}
           <div
-            className="mx-auto flex flex-col items-start justify-center rounded-[0.5rem] border border-[#EEE] bg-white gap-[2.083rem]"
-            // rounded-[0.375rem]→0.5rem(6px), gap 25px→2.083rem
+            className="mx-auto flex flex-col items-start justify-center rounded-[0.5rem] border gap-[2.083rem]
+                       border-[#EEE] bg-white dark:border-[#222] dark:bg-[#272829] "
             style={{
               width: `${cardWidthRem}rem`,
-              padding: `${1.667}rem ${gutterRem}rem`, // 20px → 1.667rem
-              height: `${81.583}rem`, // 61.1875rem(≈979px@16px) → 979/12=81.583rem
+              padding: `${1.667}rem ${gutterRem}rem`,
+              height: `${81.583}rem`,
             }}
           >
-            {/* 헤더 */}
-            <div className="flex w-full items-center gap-[1rem]">{/* gap-3 → 1rem */}
-              <div className="h-[4rem] w-[5.333rem] overflow-hidden rounded-[0.5rem] bg-gray-100" />
-              {/* h-12,w-16 → 4rem,5.333rem / rounded-md→0.5rem */}
+            {/* 헤더(썸네일 + 타이틀) */}
+            <div className="flex w-full items-center gap-[1rem]">
+              <div className="h-[4rem] w-[5.333rem] overflow-hidden rounded-[0.5rem] bg-gray-100 dark:bg-[#272829] dark:border dark:border-[#222]" />
               <div className="min-w-0">
-                <p className="truncate text-[1.167rem] font-semibold text-gray-800">대규모 수로공사</p>
-                {/* text-sm → 14px → 1.167rem */}
-                <p className="truncate text-[1rem] text-gray-500">진행률 40%</p>
-                {/* text-xs → 12px → 1rem */}
+                <p className="truncate text-[1.167rem] font-semibold text-gray-800 dark:text-gray-100">
+                  대규모 수로공사
+                </p>
+                <p className="truncate text-[1rem] text-gray-500 dark:text-gray-400">
+                  진행률 40%
+                </p>
               </div>
             </div>
 
             {/* 실시간 주의/경고/공지/작업 */}
-            <section className="w-full ">
-              <h4 className="mb-[0.667rem] text-[1.167rem] font-semibold text-gray-700">
+            <section className="w-full">
+              <h4 className="mb-[0.667rem] text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">
                 실시간 주의알림
               </h4>
               <WarnTable items={warns} />
             </section>
 
             <section className="w-full">
-              <h4 className="mb-[0.667rem] text-[1.167rem] font-semibold text-gray-700">
+              <h4 className="mb-[0.667rem] text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">
                 실시간 경고알림
               </h4>
               <DangerTable items={dangers} />
             </section>
 
             <section className="w-full">
-              <h4 className="mb-[0.667rem] text-[1.167rem] font-semibold text-gray-700">
+              <h4 className="mb-[0.667rem] text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">
                 공지사항
               </h4>
               <NoticeTable items={notices} />
             </section>
 
             <section className="w-full">
-              <h4 className="mb-[0.667rem] text-[1.167rem] font-semibold text-gray-700">
+              <h4 className="mb-[0.667rem] text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">
                 주요 작업정보
               </h4>
               <WorkTable items={works} />
             </section>
 
             <section className="w-full">
-              <h4 className="mb-[0.667rem] text-[1.167rem] font-semibold text-gray-700">
+              <h4 className="mb-[0.667rem] text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">
                 안전수칙 가이드
               </h4>
               <Carousel opts={{ loop: true }} plugins={[autoplay.current]} className="w-full">
                 <CarouselContent>
                   {SAFETY_SLIDES.map((src, i) => (
                     <CarouselItem key={src}>
-                      <div className="relative overflow-hidden rounded-[0.5rem] border">
-                        {/* h-[9rem] (144px@16px) → 12rem */}
+                      <div className="relative overflow-hidden rounded-[0.5rem] border border-gray-200 dark:border-[#222]">
                         <Image
                           src={src}
                           alt=""
@@ -165,15 +164,16 @@ export default function RightSidebar({
         </div>
       </aside>
 
-      {/* 패널 바깥 토글 버튼 */}
+      {/* 패널 바깥 토글 버튼 (카드 톤 적용) */}
       <button
         type="button"
         onClick={onToggle}
         aria-label={isOpen ? "오른쪽 메뉴 닫기" : "오른쪽 메뉴 열기"}
         className="fixed z-50 flex -translate-y-1/2 items-center justify-center
-                   rounded-l-full border border-gray-200 bg-white shadow
-                   hover:bg-gray-50 active:scale-95 transition-[right,transform] duration-300
-                   h-[4rem] w-[2.667rem]" // h-12,w-8
+                   rounded-l-full border shadow active:scale-95 transition-[right,transform] duration-300
+                   h-[4rem] w-[2.667rem]
+                   border-gray-200 bg-white text-gray-700 hover:bg-gray-50
+                   dark:border-[#222] dark:bg-[#272829] dark:text-gray-100 dark:hover:bg-[#2f3032]"
         style={{
           right: isOpen ? `${asideWidth}rem` : 0,
           top: `calc(50vh + ${topOffsetRem / 2}rem)`,
