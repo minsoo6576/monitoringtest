@@ -6,7 +6,11 @@ import WarnTable from "@/components/LiveAlarm/WarnTable";
 import DangerTable from "@/components/LiveAlarm/DangerTable";
 import NoticeTable from "@/components/LiveAlarm/NoticeTable";
 import WorkTable from "@/components/LiveAlarm/WorkTable";
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
 
 type Tone = "warn" | "danger";
 type LogItem = { text: string; time?: string; tone?: Tone };
@@ -16,11 +20,10 @@ const SAFETY_SLIDES: string[] = ["/mapex.png", "/safeguide.png", "/next.svg"];
 export default function RightSidebar({
   isOpen,
   onToggle,
-  // 300px, 260px, 15px, 80px 유지
-  panelWidthRem = 25,       // 18.75rem → 25rem
-  cardWidthRem = 21.667,    // 16.25rem → 21.667rem
-  gutterRem = 1.25,         // 0.9375rem → 1.25rem
-  topOffsetRem = 6.667,     // 5rem → 6.667rem
+  panelWidthRem = 25,
+  cardWidthRem = 21.667,
+  gutterRem = 1.25,
+  topOffsetRem = 6.667,
 }: {
   isOpen: boolean;
   onToggle: () => void;
@@ -30,7 +33,6 @@ export default function RightSidebar({
   topOffsetRem?: number;
 }) {
   const asideWidth = Math.max(panelWidthRem, cardWidthRem + gutterRem * 2);
-
   const autoplay = React.useRef(
     Autoplay({ delay: 6000, stopOnInteraction: false, stopOnMouseEnter: true })
   );
@@ -66,7 +68,9 @@ export default function RightSidebar({
       <div
         onClick={onToggle}
         className={`fixed inset-0 bg-black/30 lg:hidden transition-opacity duration-300 ${
-          isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+          isOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
         }`}
       />
 
@@ -81,90 +85,119 @@ export default function RightSidebar({
           width: `${asideWidth}rem`,
         }}
       >
-        {/* 내부 스크롤 + gutter */}
-        <div className="max-h-full overflow-y-auto py-[1.25rem]">
+        <div className="h-full w-full overflow-y-auto py-[1.25rem]">
           {/* 카드 */}
           <div
-            className="mx-auto flex flex-col items-start justify-center rounded-[0.5rem] border gap-[2.083rem]
-                       border-[#EEE] bg-white dark:border-[#222] dark:bg-[#272829] "
+            className="mx-auto flex h-full flex-col rounded-[0.5rem] border border-[#EEE] bg-white
+                       dark:border-[#222] dark:bg-[#272829]"
             style={{
               width: `${cardWidthRem}rem`,
               padding: `${1.667}rem ${gutterRem}rem`,
-              height: `${81.583}rem`,
             }}
           >
-            {/* 헤더(썸네일 + 타이틀) */}
-            <div className="flex w-full items-center gap-[1rem]">
-              <div className="h-[4rem] w-[5.333rem] overflow-hidden rounded-[0.5rem] bg-gray-100 dark:bg-[#272829] dark:border dark:border-[#222]" />
-              <div className="min-w-0">
-                <p className="truncate text-[1.167rem] font-semibold text-gray-800 dark:text-gray-100">
+            {/* 헤더 (고정 높이) */}
+            <div className="flex w-full items-center gap-[0.833rem] h-[6rem]">
+              <div className="relative h-[5.833rem] w-[7.5rem] overflow-hidden rounded-[0.333rem] border border-[#93C5FD] bg-gray-100">
+                <Image
+                  src="/mapex.png"
+                  alt=""
+                  fill
+                  className="object-cover"
+                  sizes="120px"
+                  priority
+                />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-[1.083rem] font-semibold text-gray-800 dark:text-gray-100">
                   대규모 수로공사
                 </p>
-                <p className="truncate text-[1rem] text-gray-500 dark:text-gray-400">
-                  진행률 40%
-                </p>
+                <div className="space-y-1">
+                  <p className="truncate text-[0.833rem] text-gray-500 dark:text-gray-400">
+                    대구광역시 북구 침산로 73
+                  </p>
+                  <p className="text-[0.833rem] text-gray-700 dark:text-gray-200">
+                    작업여부 : <b className="font-medium">작업중</b>
+                  </p>
+                  <p className="text-[0.833rem] text-gray-700 dark:text-gray-200">
+                    진행률 : <b className="font-medium">40%</b>
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* 실시간 주의/경고/공지/작업 */}
-            <section className="w-full">
-              <h4 className="mb-[0.667rem] text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">
-                실시간 주의알림
-              </h4>
-              <WarnTable items={warns} />
-            </section>
+            {/* 아래 5개 섹션: 화면 높이에 맞춰 균등 분배 */}
+            <div className="flex-1 grid grid-rows-5 gap-[1rem] min-h-0 w-full mt-[1rem]">
+              <section className="flex flex-col flex-1 min-h-0">
+                <h4 className="mb-[0.5rem] text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">
+                  실시간 주의알림
+                </h4>
+                <div className="flex-1 min-h-0 overflow-hidden">
+                  <WarnTable items={warns} />
+                </div>
+              </section>
 
-            <section className="w-full">
-              <h4 className="mb-[0.667rem] text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">
-                실시간 경고알림
-              </h4>
-              <DangerTable items={dangers} />
-            </section>
+              <section className="flex flex-col flex-1 min-h-0">
+                <h4 className="mb-[0.5rem] text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">
+                  실시간 경고알림
+                </h4>
+                <div className="flex-1 min-h-0 overflow-hidden">
+                  <DangerTable items={dangers} />
+                </div>
+              </section>
 
-            <section className="w-full">
-              <h4 className="mb-[0.667rem] text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">
-                공지사항
-              </h4>
-              <NoticeTable items={notices} />
-            </section>
+              <section className="flex flex-col flex-1 min-h-0">
+                <h4 className="mb-[0.5rem] text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">
+                  공지사항
+                </h4>
+                <div className="flex-1 min-h-0 overflow-hidden">
+                  <NoticeTable items={notices} />
+                </div>
+              </section>
 
-            <section className="w-full">
-              <h4 className="mb-[0.667rem] text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">
-                주요 작업정보
-              </h4>
-              <WorkTable items={works} />
-            </section>
+              <section className="flex flex-col flex-1 min-h-0">
+                <h4 className="mb-[0.5rem] text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">
+                  주요 작업정보
+                </h4>
+                <div className="flex-1 min-h-0 overflow-hidden">
+                  <WorkTable items={works} />
+                </div>
+              </section>
 
-            <section className="w-full">
-              <h4 className="mb-[0.667rem] text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">
-                안전수칙 가이드
-              </h4>
-              <Carousel opts={{ loop: true }} plugins={[autoplay.current]} className="w-full">
-                <CarouselContent>
-                  {SAFETY_SLIDES.map((src, i) => (
-                    <CarouselItem key={src}>
-                      <div className="relative overflow-hidden rounded-[0.5rem] border border-gray-200 dark:border-[#222]">
-                        <Image
-                          src={src}
-                          alt=""
-                          width={640}
-                          height={360}
-                          draggable={false}
-                          className="h-[12rem] w-full object-cover"
-                          priority={i === 0}
-                        />
-                      </div>
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-              </Carousel>
-            </section>
+              <section className="flex flex-col flex-1 min-h-0">
+                <h4 className="mb-[0.5rem] text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">
+                  안전수칙 가이드
+                </h4>
+                <Carousel
+                  opts={{ loop: true }}
+                  plugins={[autoplay.current]}
+                  className="w-full h-full flex-1"
+                >
+                  <CarouselContent>
+                    {SAFETY_SLIDES.map((src, i) => (
+                      <CarouselItem key={src}>
+                        <div className="relative h-full overflow-hidden rounded-[0.5rem] border border-gray-200 dark:border-[#222]">
+                          <Image
+                            src={src}
+                            alt=""
+                            width={640}
+                            height={360}
+                            draggable={false}
+                            className="h-full w-full object-cover"
+                            priority={i === 0}
+                          />
+                        </div>
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                </Carousel>
+              </section>
+            </div>
           </div>
           {/* /카드 */}
         </div>
       </aside>
 
-      {/* 패널 바깥 토글 버튼 (카드 톤 적용) */}
+      {/* 토글 버튼 */}
       <button
         type="button"
         onClick={onToggle}
@@ -181,10 +214,17 @@ export default function RightSidebar({
       >
         <svg
           viewBox="0 0 24 24"
-          className={`h-[1.667rem] w-[1.667rem] transition-transform ${isOpen ? "" : "rotate-180"}`}
+          className={`h-[1.667rem] w-[1.667rem] transition-transform ${
+            isOpen ? "" : "rotate-180"
+          }`}
           aria-hidden="true"
         >
-          <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" />
+          <path
+            d="M9 6l6 6-6 6"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          />
         </svg>
       </button>
     </>
