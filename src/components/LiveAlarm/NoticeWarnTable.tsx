@@ -34,15 +34,16 @@ export default function NoticeWarnTable({ items }: { items: NoticeWarnItem[] }) 
             const tone: Tone = n.tone === "danger" ? "danger" : "warn";
             const label = tone === "danger" ? "경고" : "주의";
             return (
-              <TableRow key={i}>
-                <TableCell className="w-12 ">
-                  <Chip tone={tone}>{label}</Chip>
-                </TableCell>
-                <TableCell className="max-w-[180px] truncate">{n.text}</TableCell>
-                <TableCell className="text-right text-xs text-gray-500 whitespace-nowrap">
-                  {n.time ?? "-"}
-                </TableCell>
-              </TableRow>
+             <TableRow key={i} className="p-[0.833rem]">
+            <TableCell className="w-12">
+              <Chip tone={tone}>{label}</Chip>
+            </TableCell>
+            <TableCell className="max-w-[180px] truncate">{n.text}</TableCell>
+            <TableCell className="text-right text-xs text-gray-500 whitespace-nowrap">
+              {n.time ?? "-"}
+            </TableCell>
+          </TableRow>
+
             );
           })
         )}

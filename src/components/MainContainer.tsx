@@ -9,8 +9,8 @@ type MainContainerProps = {
   children: React.ReactNode;
   leftPad?: Len;
   rightPad?: Len;
-  bottomPad?: Len;         // ← 바텀 열릴 때 패널 높이 (px 또는 rem 문자열)
-  headerOffsetPx?: Len;    // ← 고정 헤더 높이 (px 또는 rem 문자열)
+  bottomPad?: Len;       
+  headerOffsetPx?: Len;    
   bgSrc?: string;
   bgAlt?: string;
   objectPosition?: string;
@@ -22,20 +22,19 @@ export default function MainContainer({
   leftPad = 0,
   rightPad = 0,
   bottomPad = 0,
-  // 80px 유지: 80 / 12 = 6.667rem
   headerOffsetPx = "6.667rem",
   bgSrc = "/mapex.png",
   bgAlt = "메인 배경",
   objectPosition = "center",
   dim = false,
 }: MainContainerProps) {
-  // ✅ rem/px 혼용 대응
+
   const minH = `calc(100vh - ${toCss(headerOffsetPx)} - ${toCss(bottomPad)})`;
 
   return (
     <main
       aria-label={bgAlt}
-      className="relative transition-[min-height,padding] duration-300 bg-cover bg-no-repeat"
+      className="relative transition-[min-height,padding] duration-300 bg-cover bg-no-repeat rounded-xl"
       style={{
         minHeight: minH,
         paddingLeft: toCss(leftPad),

@@ -23,26 +23,14 @@ export type FieldListProps = {
   gauges: GaugeDatum[];
   counts: CountDatum[];
   progress: ProgressDatum[];
-  updatedAtText?: string;
 };
 
 const cn = (...xs: Array<string | false | null | undefined>) => xs.filter(Boolean).join(" ");
 
 export function FieldList({
   name, statusText, variant = "primary",
-  temperatureText, humidityText, gauges, counts, progress, updatedAtText,
+  temperatureText, humidityText, gauges, counts, progress,
 }: FieldListProps) {
-  // 온습도 작은 박스 (라이트/다크 각각 가독성 유지)
-  const tempBoxCls =
-    variant === "primary"
-      ? "rounded-lg bg-blue-600 px-[1rem] py-[1rem] text-white dark:bg-blue-600"
-      : "rounded-lg bg-slate-700 px-[1rem] py-[1rem] text-white dark:bg-slate-700";
-
-  const humiBoxCls =
-    variant === "primary"
-      ? "rounded-lg bg-blue-50 px-[1rem] py-[1rem] text-blue-700 dark:bg-[#272829] dark:text-blue-300 dark:border dark:border-[#222]"
-      : "rounded-lg bg-slate-200 px-[1rem] py-[1rem] text-slate-800 dark:bg-[#272829] dark:text-slate-200 dark:border dark:border-[#222]";
-
   return (
     <div className="w-full">
       {/* 카드 컨테이너 */}
@@ -56,10 +44,10 @@ export function FieldList({
 
           <span
             className={cn(
-              "inline-flex items-center rounded-md px-2 py-1 text-xs font-medium",
-              variant === "primary"
-                ? "bg-blue-50 text-blue-600 dark:bg-blue-600/20 dark:text-blue-300"
-                : "bg-slate-100 text-slate-700 dark:bg-slate-600/20 dark:text-slate-200"
+              "inline-flex w-[50px] h-[26px] px-[8px] py-[7px] justify-center items-center gap-[10px]",
+              "rounded-[6px] bg-[#026CF3]",
+              "text-white text-[0.833rem]",
+              "dark:bg-[#313233]",
             )}
           >
             {statusText}
@@ -68,18 +56,42 @@ export function FieldList({
 
         {/* 온/습도 박스 */}
         <div className="mt-[1.333rem] grid grid-cols-2 gap-[1rem]">
-          <div className={tempBoxCls}>
-            <div className="text-xs/none opacity-90">현장온도</div>
-            <div className="text-xl font-semibold">{temperatureText}</div>
+          {/* 현장온도 */}
+          <div
+            className={cn(
+              "flex flex-col justify-center items-center gap-[0.125rem]",
+              "w-[9.167rem] h-[4.167rem] px-[2.375rem] py-[1rem]",
+              "rounded-lg",
+              variant === "primary"
+                ? "bg-blue-600 text-white dark:bg-blue-600"
+                : "bg-slate-700 text-white dark:bg-slate-700"
+            )}
+          >
+             <div className="text-[0.833rem] font-normal leading-[1.25rem] text-[#F3F8FF]">현장온도</div>
+            <div className=" leading-[1.083rem] font-semibold text-[#F3F8FF] ">{temperatureText}</div>
           </div>
-          <div className={humiBoxCls}>
-            <div className="text-xs/none opacity-90">현장습도</div>
-            <div className="text-xl font-semibold">{humidityText}</div>
+
+          {/* 현장습도 */}
+          <div
+            className={cn(
+              "flex flex-col justify-center items-center gap-[0.125rem]",
+                "w-[9.167rem] h-[4.167rem] px-[2.375rem] py-[1rem]",
+              "rounded-lg",
+              variant === "primary"
+                ? "bg-blue-50 text-blue-700 dark:bg-[#272829] dark:text-blue-300 dark:border dark:border-[#222]"
+                : "bg-slate-200 text-slate-800 dark:bg-[#272829] dark:text-slate-200 dark:border dark:border-[#222]"
+            )}
+          >
+            <div className="text-[0.833rem] font-normal leading-[1.25rem] text-[#026CF3]">
+            현장습도
+          </div>
+
+          <div className=" leading-[1.083rem] font-semibold text-[#026CF3] ">{humidityText}</div>
           </div>
         </div>
 
         {/* 게이지(링) */}
-        <div className="mt-[1.667rem] grid grid-cols-4 gap-[1rem] ">
+        <div className="mt-[1.25rem] grid grid-cols-4 gap-[0.6775rem] ">
           {gauges.map(g => (
             <Ring
               key={g.label}
@@ -101,8 +113,8 @@ export function FieldList({
         <div className="space-y-3 text-sm">
           {counts.map(c => (
             <div key={c.label} className="flex items-center justify-between">
-              <span className="text-gray-600 dark:text-gray-300">{c.label}</span>
-              <span className="font-semibold text-gray-900 dark:text-gray-100">{c.valueText}</span>
+              <span className="font-normal leading-normal text-[#3A4451] dark:text-gray-300">{c.label}</span>
+              <span className="font-bold leading-normal text-[#3A4451] dark:text-gray-100">{c.valueText}</span>
             </div>
           ))}
         </div>
@@ -125,12 +137,6 @@ export function FieldList({
             />
           ))}
         </div>
-
-        {updatedAtText && (
-          <p className="mt-3 text-right text-[1rem] text-gray-500 dark:text-gray-400">
-            {updatedAtText}
-          </p>
-        )}
       </div>
     </div>
   );

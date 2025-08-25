@@ -34,9 +34,9 @@ export default function Line(props: LineProps) {
 
   return (
     <div className="space-y-1">
-      <div className="flex items-center justify-between text-xs text-gray-500">
-        <span>{label}</span>
-        <span>{valueText}</span>
+      <div className="flex items-center justify-between ">
+        <span className="text-[0.833rem] leading-[1.25rem] font-normal text-[#999] tracking-[-0.021rem]">{label}</span>
+        <span className="text-[#3A4451] text-right text-[0.833rem] leading-[1.25rem] font-bold tracking-[-0.021rem]">{valueText}</span>
       </div>
       <div className="h-2 rounded bg-gray-200 overflow-hidden">
         <div

@@ -84,7 +84,7 @@ export default function Header() {
   return (
     <header
       className="
-        fixed top-0 left-0 z-50 w-full backdrop-blur-[0.417rem] border-b
+        fixed top-0 left-0 z-50 w-full backdrop-blur-[0.417rem] 
         bg-white/80 border-gray-200
         dark:bg-[#1E1E20] dark:border-[#222]
       "
@@ -129,7 +129,7 @@ export default function Header() {
             </div>
 
             {/* 세부지표 */}
-            <div className="flex flex-col text-[1rem] text-gray-600 dark:text-gray-400">
+            <div className="flex flex-col text-[1rem] text-gray-600 dark:text-gray-400 ">
               <span className="mr-3">
                 {weather.humidity.label}{" "}
                 <b className="text-gray-900 dark:text-gray-200 font-medium">{weather.humidity.value}%</b>
@@ -151,10 +151,10 @@ export default function Header() {
             </div>
           </div>
 
-          {/* 미세먼지/초미세먼지 - 칩 형태 */}
-          <div className="flex items-center gap-[0.667rem]">
+          {/* 미세먼지/초미세먼지*/}
+          <div className="flex items-center gap-[0.667rem] ">
             <div
-              className={`inline-flex  h-12 items-center gap-[0.5rem] rounded-xl border px-3 py-2 ${pm10Cls.bg} ${pm10Cls.border}`}
+              className={`inline-flex  h-[3.333rem] items-center gap-[0.5rem] rounded-xl border px-3 py-2 ${pm10Cls.bg} ${pm10Cls.border}`}
               aria-label={`미세먼지 ${pm10Level}`}
             >
               <span className="text-[0.95rem] text-gray-500 dark:text-gray-300">미세먼지</span>
@@ -162,7 +162,7 @@ export default function Header() {
             </div>
 
             <div
-              className={`inline-flex h-12 items-center gap-[0.5rem] rounded-xl border px-3 py-2 ${pm25Cls.bg} ${pm25Cls.border}`}
+              className={`inline-flex h-[3.333rem] items-center gap-[0.5rem] rounded-xl border px-3 py-2 ${pm25Cls.bg} ${pm25Cls.border}`}
               aria-label={`초미세먼지 ${pm25Level}`}
             >
               <span className="text-[0.95rem] text-gray-500 dark:text-gray-300">초미세먼지</span>
@@ -172,42 +172,49 @@ export default function Header() {
         </div>
 
         {/* 우측 버튼 */}
-        <nav className="flex gap-[0.667rem]">
-          <button
-            className="
-              inline-flex items-center gap-[0.5rem] rounded-md border px-[1rem] py-[0.5rem] text-[1.083rem]
-              bg-white text-gray-700 border-gray-200 hover:bg-gray-50
-              active:scale-95
-              dark:bg-[#272829] dark:text-gray-200 dark:border-[#222] dark:hover:bg-[#333]
-            "
-            type="button"
-            onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-            aria-label={resolvedTheme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"}
-          >
-            <Image
-              src={resolvedTheme === "dark" ? "/images/icon/lightmode.png" : "/images/icon/darkmode.png"}
-              alt={resolvedTheme === "dark" ? "라이트 모드" : "다크 모드"}
-              width={20}
-              height={20}
-              className="object-contain"
-              priority
-            />
+      <nav className="flex items-center gap-[0.667rem]">
+        {/* ===== 다크/라이트 모드 버튼 (rem 단위로 수정됨) ===== */}
+        <button
+          className="
+            flex h-[3.333rem] items-center justify-center gap-[0.1875rem] rounded-md border border-[#EEE] bg-white px-[0.8125rem]
+            text-gray-700 hover:bg-gray-50
+            active:scale-95
+            dark:border-[#222] dark:bg-[#272829] dark:text-gray-200 dark:hover:bg-[#333]
+          "
+          type="button"
+          onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+          aria-label={resolvedTheme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"}
+        >
+          {/* Image 컴포넌트도 rem 기반의 Tailwind 클래스로 수정 */}
+          <Image
+            src={resolvedTheme === "dark" ? "/images/icon/lightmode.png" : "/images/icon/darkmode.png"}
+            alt={resolvedTheme === "dark" ? "라이트 모드" : "다크 모드"}
+            width={12}
+            height={12}
+            className="h-[1rem] w-[1rem] object-contain"
+            priority
+          />
+          <span className="text-[1rem] text-[#999] font-[400] leading-normal">
             {resolvedTheme === "dark" ? "라이트 모드" : "다크 모드"}
-          </button>
+          </span>
+        </button>
 
+        {/* ===== 로그아웃 버튼 (기존 코드 유지) ===== */}
           <button
-            className="
-              inline-flex items-center gap-[0.25rem] rounded-md border px-[1rem] py-[0.5rem] text-[1.167rem]
-              bg-white text-gray-700 border-gray-200 hover:bg-gray-50
-              active:scale-95
-              dark:bg-[#272829] dark:text-gray-200 dark:border-[#222] dark:hover:bg-[#333]
-            "
-            type="button"
-          >
-            로그아웃
-          </button>
-        </nav>
+        className="
+          inline-flex h-[3.333rem] items-center justify-center gap-[0.625rem] rounded-md border border-[#EEE] bg-white px-[0.625rem]
+          font-normal leading-normal text-[#999] hover:bg-gray-50
+          active:scale-95
+          dark:border-[#222] dark:bg-[#272829] dark:text-gray-400 dark:hover:bg-[#333]
+        "
+        type="button"
+      >
+        로그아웃
+      </button>
+      </nav>
       </div>
     </header>
   );
 }
+
+

@@ -38,7 +38,7 @@ export default function PageLayout({ children }: { children: React.ReactNode }) 
             style={{ width: leftOpen ? `${LEFT_W_REM}rem` : "0rem" }}
           />
           {/* 본문 */}
-         <div className="relative flex-1 overflow-hidden bg-white dark:bg-gray-900">
+         <div className="relative flex-1 overflow-hidden ">
             <MainContainer
               leftPad={0}
               rightPad={0}

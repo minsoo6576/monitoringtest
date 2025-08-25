@@ -6,11 +6,7 @@ import WarnTable from "@/components/LiveAlarm/WarnTable";
 import DangerTable from "@/components/LiveAlarm/DangerTable";
 import NoticeTable from "@/components/LiveAlarm/NoticeTable";
 import WorkTable from "@/components/LiveAlarm/WorkTable";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 
 type Tone = "warn" | "danger";
 type LogItem = { text: string; time?: string; tone?: Tone };
@@ -64,28 +60,18 @@ export default function RightSidebar({
 
   return (
     <>
-      {/* 모바일 오버레이 */}
-      <div
-        onClick={onToggle}
-        className={`fixed inset-0 bg-black/30 lg:hidden transition-opacity duration-300 ${
-          isOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
-        }`}
-      />
-
       {/* 오른쪽 고정 패널 */}
       <aside
-        className={`fixed right-0 z-40 border-l bg-white transition-transform duration-300 will-change-transform
+        className={`fixed right-0 z-50 bg-white transition-transform duration-300 will-change-transform
                     ${isOpen ? "translate-x-0" : "translate-x-full"}
-                    dark:bg-[#1E1E20] dark:border-[#222]`}
+                    dark:bg-[#1E1E20] border-0 ring-0 shadow-none outline-none`}
         style={{
           top: `${topOffsetRem}rem`,
           height: `calc(100vh - ${topOffsetRem}rem)`,
           width: `${asideWidth}rem`,
         }}
       >
-        <div className="h-full w-full overflow-y-auto py-[1.25rem]">
+        <div className="h-full w-full overflow-y-auto pb-[1.667rem]">
           {/* 카드 */}
           <div
             className="mx-auto flex h-full flex-col rounded-[0.5rem] border border-[#EEE] bg-white
@@ -95,15 +81,14 @@ export default function RightSidebar({
               padding: `${1.667}rem ${gutterRem}rem`,
             }}
           >
-            {/* 헤더 (고정 높이) */}
-            <div className="flex w-full items-center gap-[0.833rem] h-[6rem]">
-              <div className="relative h-[5.833rem] w-[7.5rem] overflow-hidden rounded-[0.333rem] border border-[#93C5FD] bg-gray-100">
+            {/* 헤더 */}
+            <div className="flex w-full items-center gap-[0.833rem] h-[6rem] shrink-0">
+              <div className="relative h-[5.833rem] w-[7.5rem] rounded-[0.333rem] border">
                 <Image
                   src="/mapex.png"
                   alt=""
                   fill
                   className="object-cover"
-                  sizes="120px"
                   priority
                 />
               </div>
@@ -125,46 +110,51 @@ export default function RightSidebar({
               </div>
             </div>
 
-            {/* 아래 5개 섹션: 화면 높이에 맞춰 균등 분배 */}
-            <div className="flex-1 grid grid-rows-5 gap-[1rem] min-h-0 w-full mt-[1rem]">
-              <section className="flex flex-col flex-1 min-h-0">
-                <h4 className="mb-[0.5rem] text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">
-                  실시간 주의알림
-                </h4>
-                <div className="flex-1 min-h-0 overflow-hidden">
-                  <WarnTable items={warns} />
-                </div>
-              </section>
+            {/* 본문: 균등분할 해제, Warn 섹션 크게 */}
+            <div className="flex-1 grid grid-rows-[1fr,auto,auto,auto,auto] gap-[2.083rem] min-h-0 w-full mt-[1rem]">
+              {/* 실시간 주의알림 */}
+               <section className="flex min-h-0 flex-col h-[14rem]">
+              <h4 className="mb-[1.25rem] text-[1.083rem] font-bold text-[#3A4451] dark:text-gray-200">
+                실시간 주의알림
+              </h4>
+              <div className="flex-1 min-h-0 ">
+                <WarnTable items={warns} />
+              </div>
+            </section>
 
-              <section className="flex flex-col flex-1 min-h-0">
-                <h4 className="mb-[0.5rem] text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">
+              {/* 실시간 경고알림 */}
+              <section className="flex min-h-0 flex-col h-[14rem]">
+                <h4 className="mb-[1.25rem] text-[1.083rem] font-semibold text-gray-700 dark:text-gray-200">
                   실시간 경고알림
                 </h4>
-                <div className="flex-1 min-h-0 overflow-hidden">
+                <div className="flex-1 min-h-0 ">
                   <DangerTable items={dangers} />
                 </div>
               </section>
 
-              <section className="flex flex-col flex-1 min-h-0">
-                <h4 className="mb-[0.5rem] text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">
+              {/* 공지사항 */}
+              <section className="flex min-h-0 flex-col h-[14rem]">
+                <h4 className="mb-[1.25rem] text-[1.083rem] font-bold text-gray-700 dark:text-gray-200">
                   공지사항
                 </h4>
-                <div className="flex-1 min-h-0 overflow-hidden">
+                <div className="flex-1 min-h-0 ">
                   <NoticeTable items={notices} />
                 </div>
               </section>
 
-              <section className="flex flex-col flex-1 min-h-0">
-                <h4 className="mb-[0.5rem] text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">
+              {/* 주요 작업정보 */}
+              <section className="flex min-h-0 flex-col h-[14rem]">
+                <h4 className="mb-[1.25rem] text-[1.083rem] font-bold text-gray-700 dark:text-gray-200">
                   주요 작업정보
                 </h4>
-                <div className="flex-1 min-h-0 overflow-hidden">
+                <div className="flex-1 min-h-0 ">
                   <WorkTable items={works} />
                 </div>
               </section>
 
-              <section className="flex flex-col flex-1 min-h-0">
-                <h4 className="mb-[0.5rem] text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">
+              {/* 안전수칙 가이드 */}
+              <section className="flex min-h-0 flex-col h-[14rem]">
+                <h4 className="mb-[0.5rem] text-[1.083rem] font-bold text-gray-700 dark:text-gray-200">
                   안전수칙 가이드
                 </h4>
                 <Carousel
@@ -174,7 +164,7 @@ export default function RightSidebar({
                 >
                   <CarouselContent>
                     {SAFETY_SLIDES.map((src, i) => (
-                      <CarouselItem key={src}>
+                      <CarouselItem key={src} className="basis-full">
                         <div className="relative h-full overflow-hidden rounded-[0.5rem] border border-gray-200 dark:border-[#222]">
                           <Image
                             src={src}
@@ -214,17 +204,10 @@ export default function RightSidebar({
       >
         <svg
           viewBox="0 0 24 24"
-          className={`h-[1.667rem] w-[1.667rem] transition-transform ${
-            isOpen ? "" : "rotate-180"
-          }`}
+          className={`h-[1.667rem] w-[1.667rem] transition-transform ${isOpen ? "" : "rotate-180"}`}
           aria-hidden="true"
         >
-          <path
-            d="M9 6l6 6-6 6"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-          />
+          <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2" />
         </svg>
       </button>
     </>
