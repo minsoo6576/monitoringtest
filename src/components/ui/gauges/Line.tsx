@@ -33,12 +33,12 @@ export default function Line(props: LineProps) {
   const pct = calcPercent(props);
 
   return (
-    <div className="space-y-1">
-      <div className="flex items-center justify-between ">
-        <span className="text-[0.833rem] leading-[1.25rem] font-normal text-[#999] tracking-[-0.021rem]">{label}</span>
-        <span className="text-[#3A4451] text-right text-[0.833rem] leading-[1.25rem] font-bold tracking-[-0.021rem]">{valueText}</span>
+    <div className="space-y-2">
+      <div className="flex items-center justify-between mb-[0.5rem]">
+        <span className="text-[1rem] leading-[1.25rem] font-normal text-[#999] tracking-[-0.021rem]">{label}</span>
+        <span className="text-[#3A4451] text-right text-[1rem] leading-[1.25rem] font-bold tracking-[-0.021rem]">{valueText}</span>
       </div>
-      <div className="h-2 rounded bg-gray-200 overflow-hidden">
+      <div className="h-2 rounded bg-gray-200 overflow-hidden !mb-[1rem]">
         <div
           className="h-2 bg-blue-500"
           style={{ width: `${pct}%` }}

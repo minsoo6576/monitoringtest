@@ -1,27 +1,28 @@
+// src/components/BottomSidebar.tsx
 "use client";
 
 import React, { memo } from "react";
 import NoticeWarnTable from "@/components/LiveAlarm/NoticeWarnTable";
-import CircleChart from "@/components/Charts/CircleChart";
+import EachFieldChart  from "@/components/Charts/EachFieldChart"
 
-type LogItem = { text: string; time?: string; tone?: "warn" | "danger" };
+type LogItem = { location: string; text: string; time?: string; tone?: "warn" | "danger" };
 
 const ALARMS: LogItem[] = [
-  { text: "test01 O₂ 주의발생", time: "10:31:21", tone: "warn" },
-  { text: "H₂S 감지", time: "10:29:10", tone: "warn" },
-  { text: "추가 데이터 1", time: "10:19:00", tone: "danger" },
-  { text: "추가 데이터 2", time: "10:18:00", tone: "warn" },
+  { location: "현장1", text: "test01 O₂ 주의발생", time: "10:31:21", tone: "warn" },
+  { location: "현장2", text: "H₂S 감지",          time: "10:29:10", tone: "warn" },
+  { location: "현장1", text: "추가 데이터 1",     time: "10:19:00", tone: "danger" },
+  { location: "현장2", text: "추가 데이터 2",     time: "10:18:00", tone: "warn" },
 ];
 
 const SectionTitle = memo(({ children }: { children: React.ReactNode }) => (
-  <h4 className="text-[1.167rem] font-semibold text-gray-700 dark:text-gray-200">{children}</h4>
+  <h4 className="text-[1.15rem] text-[#3A4451] font-bold not-italic leading-[1] tracking-[-0.027rem] dark:text-gray-200">
+    {children}
+  </h4>
 ));
 SectionTitle.displayName = "SectionTitle";
 
 const Card = memo(({ className = "", children }: { className?: string; children: React.ReactNode }) => (
-  <div
-    className={`flex flex-col items-start rounded-[0.417rem] border border-gray-200 bg-white dark:border-[#222] dark:bg-[#272829] ${className}`}
-  >
+  <div className={`flex flex-col items-start rounded-[0.417rem] border border-gray-200 bg-white dark:border-[#222] dark:bg-[#272829] ${className}`}>
     {children}
   </div>
 ));
@@ -30,18 +31,17 @@ Card.displayName = "Card";
 export default function BottomSidebar({
   isOpen,
   onToggle,
-  heightPx = 220, 
+  heightPx = 200,
   insetLeftRem = 0,
   insetRightRem = 0,
 }: {
   isOpen: boolean;
   onToggle: () => void;
-  heightPx?: number; // 타입 정의에서도 heightRem 제거
+  heightPx?: number;
   insetLeftRem?: number;
   insetRightRem?: number;
 }) {
-  // heightPx를 기준으로 높이를 계산하도록 로직 단순화
-  const resolvedHeightRem = heightPx / 12;
+  const resolvedHeightRem = heightPx / 12; // 1rem = 12px
   const centerX = `calc(${insetLeftRem}rem + (100vw - ${insetLeftRem + insetRightRem}rem)/2)`;
 
   return (
@@ -49,8 +49,8 @@ export default function BottomSidebar({
       {/* 패널 */}
       <aside
         className={`fixed bottom-0 z-40 bg-white transition-transform duration-300 will-change-transform
-                   ${isOpen ? "translate-y-0" : "translate-y-full"}
-                   transition-[left,right,transform] dark:bg-[#1E1E20]`}
+                    ${isOpen ? "translate-y-0" : "translate-y-full"}
+                    transition-[left,right,transform] dark:bg-[#1E1E20]`}
         style={{
           height: `${resolvedHeightRem}rem`,
           left: `${insetLeftRem}rem`,
@@ -58,25 +58,23 @@ export default function BottomSidebar({
         }}
       >
         <div className="h-full pt-[1rem] pb-[1.667rem]">
-          {/* 메인 그리드/플렉스 영역 */}
-          <div className="flex h-[15.667rem] w-full items-stretch justify-between gap-[clamp(0.667rem,3rem-2vw,1.083rem)]">
-            {/* 1) 전체현장 실시간 알림 */}
-            <Card className="h-full w-[33.333rem] shrink-0 px-[1.333rem] py-[1.333rem]">
+          {/* 메인: 2컬럼 (그래프 제거) */}
+          <div className="flex h-full w-full items-stretch gap-[clamp(0.667rem,3rem-2vw,1.083rem)]">
+            {/* 1) 알림 */}
+            <Card className="h-full w-[clamp(22rem,32vw,33.333rem)] shrink-0 px-[1.333rem] py-[1.333rem]">
               <SectionTitle>전체현장 실시간 알림</SectionTitle>
-              <NoticeWarnTable items={ALARMS} />
-            </Card>
-
-            {/* 2) 원그래프 */}
-            <Card className="h-full w-[33.333rem] shrink-0 px-[1.333rem] py-[1.333rem]">
-              <SectionTitle>원그래프</SectionTitle>
-              <div className="mt-[0.667rem] flex min-h-0 flex-1 items-center justify-center">
-                <div className="translate-x-[1.667rem]">
-                  <CircleChart />
-                </div>
+              <div className="mt-[0.667rem] min-h-0 flex-1 w-full">
+                <NoticeWarnTable items={ALARMS} />
               </div>
             </Card>
 
-            {/* 3) 8개 지표 */}
+         <Card className="h-full w-[33.333rem] shrink-0 px-[1.333rem] py-[1.333rem]">
+  <SectionTitle>현장별 활동량</SectionTitle>
+  <div className="mt-[0.667rem] flex min-h-0 flex-1 items-center justify-center">
+    <EachFieldChart />
+  </div>
+</Card>
+            {/* 2) 8개 지표 */}
             <div className="h-full flex-1">
               <div className="grid h-full content-between grid-cols-[repeat(4,minmax(0,1fr))] gap-[clamp(0.667rem,1.5rem-0.5vw,1rem)]">
                 {Array.from({ length: 8 }).map((_, i) => (

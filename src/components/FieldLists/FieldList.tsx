@@ -40,7 +40,7 @@ export function FieldList({
       >
         {/* 헤더 라인 */}
         <div className="flex items-start justify-between">
-          <div className="font-semibold text-gray-900 dark:text-gray-100">{name}</div>
+          <div className="font-semibold text-[1.15rem] text-gray-900 dark:text-gray-100">{name}</div>
 
           <span
             className={cn(
@@ -107,10 +107,10 @@ export function FieldList({
           ))}
         </div>
 
-        <hr className="my-[1.333rem] border-gray-200 dark:border-[#222]" />
+        <hr className="my-[1.333rem] border-gray-200 dark:border-[#EEE]" />
 
         {/* 카운트 목록 */}
-        <div className="space-y-3 text-sm">
+        <div className="space-y-3 text-[1rem]">
           {counts.map(c => (
             <div key={c.label} className="flex items-center justify-between">
               <span className="font-normal leading-normal text-[#3A4451] dark:text-gray-300">{c.label}</span>
@@ -119,7 +119,7 @@ export function FieldList({
           ))}
         </div>
 
-        <hr className="my-[1.333rem] border-gray-200 dark:border-[#222]" />
+        <hr className="my-[1.333rem] border-gray-200 dark:border-[#EEE]" />
 
         {/* 진행률/바 */}
         <div className="space-y-3">

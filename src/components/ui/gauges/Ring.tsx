@@ -39,28 +39,25 @@ export default function Ring(props: RingProps) {
     <div className="grid place-items-center gap-2">
       {/* 바깥 원: 50px = 4.167rem */}
       <div
-        className="relative grid place-items-center w-[4.167rem] h-[4.167rem] rounded-full text-gray-200 dark:text-[#222]"
+        className="relative grid place-items-center w-[5.167rem] h-[5.167rem] rounded-full text-gray-200 dark:text-[#222]"
         style={{
           background: `conic-gradient(${RING_COLOR} ${angle}deg, currentColor 0deg)`,
         }}
         aria-label={`${label} ${value}${unit}`}
       >
     
-    <div className="grid place-items-center w-[3.16rem] h-[3.16rem] rounded-full bg-white dark:bg-[#272829] gap-0">
-  <div className="text-[1rem] font-bold leading-[1rem] text-gray-900 dark:text-gray-100">
+    <div className="grid place-items-center w-[4.16rem] h-[4.16rem] rounded-full bg-white dark:bg-[#272829] gap-0">
+  <div className="text-[1.2rem] font-bold leading-[1rem] text-gray-900 dark:text-gray-100">
     {value}
   </div>
-  <div className="text-[0.667rem] font-normal leading-[0.75rem] text-gray-500 dark:text-gray-400 -mt-[1.2rem]">
+  <div className="text-[0.9rem] font-normal leading-[0.75rem] text-gray-500 dark:text-gray-400 -mt-[1.5rem]">
     {unit}
   </div>
 </div>
 
-
-
-
       </div>
 
-      <div className="text-xs text-gray-500 dark:text-gray-400 text-center">
+      <div className="text-[0.9rem] text-gray-500 dark:text-gray-400 text-center">
         {label}
       </div>
     </div>

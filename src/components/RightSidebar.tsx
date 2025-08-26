@@ -16,8 +16,8 @@ const SAFETY_SLIDES: string[] = ["/mapex.png", "/safeguide.png", "/next.svg"];
 export default function RightSidebar({
   isOpen,
   onToggle,
-  panelWidthRem = 25,
-  cardWidthRem = 21.667,
+  panelWidthRem = 28,
+  cardWidthRem = 24.667,
   gutterRem = 1.25,
   topOffsetRem = 6.667,
 }: {
@@ -93,7 +93,7 @@ export default function RightSidebar({
                 />
               </div>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-[1.083rem] font-semibold text-gray-800 dark:text-gray-100">
+                <p className="truncate text-[1.15rem] font-semibold text-gray-800 dark:text-gray-100">
                   대규모 수로공사
                 </p>
                 <div className="space-y-1">
@@ -109,79 +109,57 @@ export default function RightSidebar({
                 </div>
               </div>
             </div>
+      {/* 본문: 세로 flex, 섹션별 비율 분배 */}
+      <div className="flex-1 flex flex-col gap-[clamp(1.8rem,2vh,1.25rem)]  w-full mt-[1rem]">
+        {/* 실시간 주의알림: 가장 크게 */}
+        <section className="flex  flex-col flex-[2_1_0%] basis-[10rem] max-h-[26rem]">
+          <h4 className="mb-[0.85rem] text-[1.15rem] font-bold text-[#3A4451] dark:text-gray-200">실시간 주의알림</h4>
+          <div className="flex-1  overflow-auto">
+            <WarnTable items={warns} />
+          </div>
+        </section>
 
-            {/* 본문: 균등분할 해제, Warn 섹션 크게 */}
-            <div className="flex-1 grid grid-rows-[1fr,auto,auto,auto,auto] gap-[2.083rem] min-h-0 w-full mt-[1rem]">
-              {/* 실시간 주의알림 */}
-               <section className="flex min-h-0 flex-col h-[14rem]">
-              <h4 className="mb-[1.25rem] text-[1.083rem] font-bold text-[#3A4451] dark:text-gray-200">
-                실시간 주의알림
-              </h4>
-              <div className="flex-1 min-h-0 ">
-                <WarnTable items={warns} />
-              </div>
-            </section>
+        {/* 실시간 경고알림: 그 다음 비중 */}
+        <section className="flex   flex-col flex-[1.5_1_0%] basis-[10rem] max-h-[22rem]">
+          <h4 className="mb-[0.85rem] text-[1.15rem] font-semibold text-gray-700 dark:text-gray-200">실시간 경고알림</h4>
+          <div className="flex-1  overflow-auto">
+            <DangerTable items={dangers} />
+          </div>
+        </section>
 
-              {/* 실시간 경고알림 */}
-              <section className="flex min-h-0 flex-col h-[14rem]">
-                <h4 className="mb-[1.25rem] text-[1.083rem] font-semibold text-gray-700 dark:text-gray-200">
-                  실시간 경고알림
-                </h4>
-                <div className="flex-1 min-h-0 ">
-                  <DangerTable items={dangers} />
-                </div>
-              </section>
+        {/* 공지사항 */}
+        <section className="flex  flex-col flex-[1.25_1_0%] basis-[10rem] max-h-[20rem]">
+          <h4 className="mb-[0.85rem] text-[1.15rem] font-bold text-gray-700 dark:text-gray-200">공지사항</h4>
+          <div className="flex-1  overflow-auto">
+            <NoticeTable items={notices} />
+          </div>
+        </section>
 
-              {/* 공지사항 */}
-              <section className="flex min-h-0 flex-col h-[14rem]">
-                <h4 className="mb-[1.25rem] text-[1.083rem] font-bold text-gray-700 dark:text-gray-200">
-                  공지사항
-                </h4>
-                <div className="flex-1 min-h-0 ">
-                  <NoticeTable items={notices} />
-                </div>
-              </section>
+        {/* 주요 작업정보 */}
+        <section className="flex  flex-col flex-[1.25_1_0%] basis-[10rem] max-h-[20rem]">
+          <h4 className="mb-[0.85rem] text-[1.15rem] font-bold text-gray-700 dark:text-gray-200">주요 작업정보</h4>
+          <div className="flex-1 ">
+            <WorkTable items={works} />
+          </div>
+        </section>
 
-              {/* 주요 작업정보 */}
-              <section className="flex min-h-0 flex-col h-[14rem]">
-                <h4 className="mb-[1.25rem] text-[1.083rem] font-bold text-gray-700 dark:text-gray-200">
-                  주요 작업정보
-                </h4>
-                <div className="flex-1 min-h-0 ">
-                  <WorkTable items={works} />
-                </div>
-              </section>
+        {/* 안전수칙 가이드: 가장 작게 */}
+        <section className="flex  flex-col flex-[1_1_0%] basis-[9rem] max-h-[18rem]">
+          <h4 className="mb-[1rem] text-[1.15rem] font-bold text-gray-700 dark:text-gray-200">안전수칙 가이드</h4>
+          <Carousel opts={{ loop: true }} plugins={[autoplay.current]} className="w-full h-full">
+            <CarouselContent>
+              {SAFETY_SLIDES.map((src, i) => (
+                <CarouselItem key={src} className="basis-full">
+                  <div className="relative h-[12rem] overflow-hidden rounded-[0.5rem] border border-gray-200 dark:border-[#222]">
+                    <Image src={src} alt="" width={640} height={360} draggable={false} className="h-full w-full object-cover" priority={i===0} />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        </section>
+      </div>
 
-              {/* 안전수칙 가이드 */}
-              <section className="flex min-h-0 flex-col h-[14rem]">
-                <h4 className="mb-[0.5rem] text-[1.083rem] font-bold text-gray-700 dark:text-gray-200">
-                  안전수칙 가이드
-                </h4>
-                <Carousel
-                  opts={{ loop: true }}
-                  plugins={[autoplay.current]}
-                  className="w-full h-full flex-1"
-                >
-                  <CarouselContent>
-                    {SAFETY_SLIDES.map((src, i) => (
-                      <CarouselItem key={src} className="basis-full">
-                        <div className="relative h-full overflow-hidden rounded-[0.5rem] border border-gray-200 dark:border-[#222]">
-                          <Image
-                            src={src}
-                            alt=""
-                            width={640}
-                            height={360}
-                            draggable={false}
-                            className="h-full w-full object-cover"
-                            priority={i === 0}
-                          />
-                        </div>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                </Carousel>
-              </section>
-            </div>
           </div>
           {/* /카드 */}
         </div>

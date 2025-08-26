@@ -99,7 +99,7 @@ export default function LeftSidebar({ isOpen, onToggle }: LeftSidebarProps) {
     <>
       {/* 사이드바 패널 */}
    <aside
-   className={`fixed left-0 top-[6.667rem] pb-[1.667rem] z-40 h-[calc(100vh-6.667rem)] w-[25rem] bg-white
+   className={`fixed left-0 top-[6.667rem] pb-[1.667rem] z-40 h-[calc(100vh-6.667rem)] w-[28rem] bg-white
    transition-transform duration-300 will-change-transform
    ${isOpen ? "translate-x-0" : "-translate-x-full"}
    dark:bg-[#1E1E20] !border-0 !ring-0 !shadow-none !outline-none`}>
