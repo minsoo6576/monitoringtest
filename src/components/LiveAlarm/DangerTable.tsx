@@ -30,7 +30,7 @@ export default function DangerTable({ items }: { items: DangerItem[] }) {
           </TableRow>
         ) : (
           items.map((n, i) => (
-            <TableRow key={i} className="group align-middle ">
+            <TableRow key={i} className="group align-middle">
               {/* 상태칩 */}
               <TableCell className="p-0 w-12">
                 <div className="h-full box-border flex items-center px-[0.833rem] pt-[0.667rem] pb-[0.667rem] group-first:pt-0 group-last:pb-0">

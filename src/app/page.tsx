@@ -49,18 +49,20 @@ export default function PageLayout({ children }: { children: React.ReactNode }) 
 
           {/* 본문 */}
           <div className="relative flex-1 overflow-hidden">
-            <MainContainer
-              leftPad={0}
-              rightPad={0}
-              // BottomSidebar가 열릴 때 메인 컨텐츠 하단 패딩(px) 확보
-              bottomPad={bottomOpen ? BOTTOM_H_PX : 0}
-              // 헤더 오프셋은 px 단위로 넘김
-              headerOffsetPx={HEADER_H_REM * 12}
-              bgSrc="/mapex.png"
-              objectPosition="center"
-            >
-              {children}
-            </MainContainer>
+
+        <MainContainer
+          leftPad={0}
+          rightPad={0}
+          bottomPad={bottomOpen ? BOTTOM_H_PX : 0}
+          headerOffsetPx={0}              // ✅ 부모가 이미 헤더만큼 높이 뺐음
+          // bgSrc/objectPosition 넘겨도 되지만 현재 계산엔 미사용
+          // objectPosition="center"
+          // 디버그: 지도를 위로 띄워서 덮임 여부 확인
+          mapZ={0}                        // 필요시 30으로 올려서 테스트
+        >
+          {children}
+        </MainContainer>
+
           </div>
 
           {/* 우측 스페이서 (RightSidebar 가시 영역 폭과 동일) */}

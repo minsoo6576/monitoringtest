@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "next-themes";
+import {useState, useEffect} from "react"
 
 type AQIKind = "pm10" | "pm25";
 
@@ -47,6 +48,22 @@ function levelClasses(level: "좋음" | "보통" | "나쁨" | "매우나쁨") {
 
 export default function Header() {
   const { resolvedTheme, setTheme } = useTheme();
+
+   const [isMounted, setIsMounted] = useState(false);
+  // 2. 날짜/시간을 저장할 상태를 추가합니다. (초기값은 비워둡니다)
+  const [currentTime, setCurrentTime] = useState({ date: "", time: "" });
+
+  // 3. useEffect를 사용하여 컴포넌트가 클라이언트에 마운트된 후에만 상태를 변경합니다.
+  useEffect(() => {
+    setIsMounted(true);
+
+    // 날짜/시간을 클라이언트에서만 생성하여 상태에 저장합니다.
+    const now = new Date();
+    setCurrentTime({
+      date: now.toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" }),
+      time: now.toLocaleTimeString("ko-KR", { hour: "numeric", minute: "numeric" }),
+    });
+  }, []);
 
   const weatherIcons: Record<string, string> = {
     맑음: "/images/weathericon/sunny.png",
@@ -174,30 +191,29 @@ export default function Header() {
         {/* 우측 버튼 */}
       <nav className="flex items-center gap-[0.667rem]">
         {/* ===== 다크/라이트 모드 버튼 (rem 단위로 수정됨) ===== */}
-        <button
-          className="
-            flex h-[3.333rem] items-center justify-center gap-[0.1875rem] rounded-md border border-[#EEE] bg-white px-[0.8125rem]
-            text-gray-700 hover:bg-gray-50
-            active:scale-95
-            dark:border-[#222] dark:bg-[#272829] dark:text-gray-200 dark:hover:bg-[#333]
-          "
-          type="button"
-          onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-          aria-label={resolvedTheme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"}
-        >
-          {/* Image 컴포넌트도 rem 기반의 Tailwind 클래스로 수정 */}
-          <Image
-            src={resolvedTheme === "dark" ? "/images/icon/lightmode.png" : "/images/icon/darkmode.png"}
-            alt={resolvedTheme === "dark" ? "라이트 모드" : "다크 모드"}
-            width={12}
-            height={12}
-            className="h-[1rem] w-[1rem] object-contain"
-            priority
-          />
-          <span className="text-[1rem] text-[#999] font-[400] leading-normal">
-            {resolvedTheme === "dark" ? "라이트 모드" : "다크 모드"}
-          </span>
-        </button>
+       <button
+              className="
+                flex h-[3.333rem] items-center justify-center gap-[0.1875rem] rounded-md border border-[#EEE] bg-white px-[0.8125rem]
+                text-gray-700 hover:bg-gray-50
+                active:scale-95
+                dark:border-[#222] dark:bg-[#272829] dark:text-gray-200 dark:hover:bg-[#333]
+              "
+              type="button"
+              onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
+              aria-label={resolvedTheme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"}
+            >
+              <Image
+                src={resolvedTheme === "dark" ? "/images/icon/lightmode.png" : "/images/icon/darkmode.png"}
+                alt={resolvedTheme === "dark" ? "라이트 모드" : "다크 모드"}
+                width={12}
+                height={12}
+                className="h-[1rem] w-[1rem] object-contain"
+                priority
+              />
+              <span className="text-[1rem] text-[#999] font-[400] leading-normal">
+                {resolvedTheme === "dark" ? "라이트 모드" : "다크 모드"}
+              </span>
+            </button>
 
         {/* ===== 로그아웃 버튼 (기존 코드 유지) ===== */}
           <button
