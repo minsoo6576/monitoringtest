@@ -101,7 +101,7 @@ export default function LeftSidebar({ isOpen, onToggle }: LeftSidebarProps) {
    <aside
    className={`fixed left-0 top-[6.667rem] pb-[1.667rem] z-40 h-[calc(100vh-6.667rem)] w-[28rem] bg-white
    transition-transform duration-300 will-change-transform
-   ${isOpen ? "translate-x-0" : "-translate-x-full"}
+   ${isOpen ? " " : "-translate-x-full"}
    dark:bg-[#1E1E20] !border-0 !ring-0 !shadow-none !outline-none`}>
     <ScrollArea className="h-full w-full">
         <div className="h-full overflow-y-auto px-[1.333rem] text-gray-900 dark:text-gray-100">

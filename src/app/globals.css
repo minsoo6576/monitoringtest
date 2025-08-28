@@ -81,10 +81,20 @@ body {
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* VWorld 지도 라이브러리가 전역 CSS를 오염시켜 발생하는 border 제거 현상 대응 */
+@layer utilities {
+  .border,
+  .border-t,
+  .border-b,
+  .border-l,
+  .border-r,
+  .border-x,
+  .border-y {
+    border-style: solid !important;
   }
 }

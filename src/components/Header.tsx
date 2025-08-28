@@ -1,9 +1,12 @@
+// src/components/Header.tsx
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import {useState, useEffect} from "react"
+import { useEffect, useState } from "react";
+
+import logo from "@/public/Logo.png";
 
 type AQIKind = "pm10" | "pm25";
 
@@ -18,46 +21,26 @@ function getLevel(kind: AQIKind, v: number) {
 function levelClasses(level: "좋음" | "보통" | "나쁨" | "매우나쁨") {
   switch (level) {
     case "좋음":
-      return {
-        text: "text-[#2F7CFF]",
-        bg: "bg-[#F3F8FF]",
-        border : "border-none"
-      };
+      return { text: "text-[#2F7CFF]", bg: "bg-[#F3F8FF]", border: "border-none" };
     case "보통":
-      return {
-        text: "text-[#16A34A]",
-        bg: "bg-[#ECFFED]",
-       border : "border-none"
-      };
+      return { text: "text-[#16A34A]", bg: "bg-[#ECFFED]", border: "border-none" };
     case "나쁨":
-      return {
-        text: "text-[#D97706]",
-        bg: "bg-[#FFFBF6]",
-       border : "border-none"
-      };
+      return { text: "text-[#D97706]", bg: "bg-[#FFFBF6]", border: "border-none" };
     case "매우나쁨":
     default:
-      return {
-        text: "text-[#DC2626]",
-        bg: "bg-[#FFF8F8;]",
-       border : "border-none"
-      };
+      return { text: "text-[#DC2626]", bg: "bg-[#FFF8F8]", border: "border-none" };
   }
 }
-
 
 export default function Header() {
   const { resolvedTheme, setTheme } = useTheme();
 
-   const [isMounted, setIsMounted] = useState(false);
-  // 2. 날짜/시간을 저장할 상태를 추가합니다. (초기값은 비워둡니다)
+  // ✅ SSR/CSR 불일치 방지
+  const [mounted, setMounted] = useState(false);
   const [currentTime, setCurrentTime] = useState({ date: "", time: "" });
 
-  // 3. useEffect를 사용하여 컴포넌트가 클라이언트에 마운트된 후에만 상태를 변경합니다.
   useEffect(() => {
-    setIsMounted(true);
-
-    // 날짜/시간을 클라이언트에서만 생성하여 상태에 저장합니다.
+    setMounted(true);
     const now = new Date();
     setCurrentTime({
       date: now.toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" }),
@@ -65,6 +48,7 @@ export default function Header() {
     });
   }, []);
 
+  // 데모 날씨 데이터 (시간/날짜는 위 상태 사용)
   const weatherIcons: Record<string, string> = {
     맑음: "/images/weathericon/sunny.png",
     구름조금: "/images/weathericon/partly-cloudy.png",
@@ -77,8 +61,8 @@ export default function Header() {
   const fallbackIcon = "/images/weathericon/partly-cloudy.png";
 
   const weather = {
-    date: new Date().toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" }),
-    time: new Date().toLocaleTimeString("ko-KR", { hour: "numeric", minute: "numeric" }),
+    date: currentTime.date || "—",
+    time: currentTime.time || "—",
     tempText: "35.3°",
     conditionKo: "구름조금",
     humidity: { label: "습도", value: 46 },
@@ -91,8 +75,6 @@ export default function Header() {
 
   const pm10 = weather.pm10[0].value;
   const pm25 = weather.pm25[0].value;
-
-  // 등급 계산 + 클래스
   const pm10Level = getLevel("pm10", pm10);
   const pm25Level = getLevel("pm25", pm25);
   const pm10Cls = levelClasses(pm10Level);
@@ -101,7 +83,7 @@ export default function Header() {
   return (
     <header
       className="
-        fixed top-0 left-0 z-50 w-full backdrop-blur-[0.417rem] 
+        fixed top-0 left-0 z-50 w-full backdrop-blur-[0.417rem]
         bg-white/80 border-gray-200
         dark:bg-[#1E1E20] dark:border-[#222]
       "
@@ -109,15 +91,22 @@ export default function Header() {
       <div className="flex h-[6.667rem] items-center gap-x-[12.5rem] px-[2rem]">
         {/* 좌: 로고 */}
         <Link href="/" className="flex items-center">
-          <div className="relative w-[10.833rem] aspect-[13/3]">
-            <Image src="/logo.png" alt="로고" fill className="object-contain" />
+          <div className="relative w-40 h-10">
+           <Image
+  src="/logo.png"   // import 하지 말고, public 루트 기준 경로만!
+  alt="관제 로고"
+  fill
+  sizes="160px"
+  priority
+/>
+
           </div>
         </Link>
 
         {/* 가운데: 날짜/날씨/지표 */}
         <div className="flex-1 grid grid-cols-[auto_auto_1fr] items-center gap-[3.333rem] text-gray-800 dark:text-gray-200">
-          {/* 날짜/시간 */}
-          <div className="text-[1.083rem] leading-none">
+          {/* 날짜/시간 (클라에서만 만든 값 표시) */}
+          <div className="text-[1.083rem] leading-none" suppressHydrationWarning>
             <span className="mr-3">{weather.date}</span>
             <span className="font-semibold">{weather.time}</span>
           </div>
@@ -125,16 +114,14 @@ export default function Header() {
           {/* 날씨 */}
           <div className="flex items-center gap-[1rem]">
             <div className="flex items-center gap-[0.667rem]">
-              <span className="text-[2rem] leading-none">
-                <Image
-                  src={weatherIcons[weather.conditionKo] ?? fallbackIcon}
-                  alt={weather.conditionKo}
-                  width={32}
-                  height={32}
-                  className="inline-block align-middle object-contain"
-                  priority
-                />
-              </span>
+              <Image
+                src={weatherIcons[weather.conditionKo] ?? fallbackIcon}
+                alt={weather.conditionKo}
+                width={32}
+                height={32}
+                className="inline-block align-middle object-contain"
+                priority
+              />
               <div className="flex flex-col leading-none">
                 <span className="text-[1.667rem] font-semibold text-gray-900 dark:text-gray-100">
                   {weather.tempText}
@@ -146,7 +133,7 @@ export default function Header() {
             </div>
 
             {/* 세부지표 */}
-            <div className="flex flex-col text-[1rem] text-gray-600 dark:text-gray-400 ">
+            <div className="flex flex-col text-[1rem] text-gray-600 dark:text-gray-400">
               <span className="mr-3">
                 {weather.humidity.label}{" "}
                 <b className="text-gray-900 dark:text-gray-200 font-medium">{weather.humidity.value}%</b>
@@ -168,16 +155,15 @@ export default function Header() {
             </div>
           </div>
 
-          {/* 미세먼지/초미세먼지*/}
-          <div className="flex items-center gap-[0.667rem] ">
+          {/* 미세먼지/초미세먼지 */}
+          <div className="flex items-center gap-[0.667rem]">
             <div
-              className={`inline-flex  h-[3.333rem] items-center gap-[0.5rem] rounded-xl border px-3 py-2 ${pm10Cls.bg} ${pm10Cls.border}`}
+              className={`inline-flex h-[3.333rem] items-center gap-[0.5rem] rounded-xl border px-3 py-2 ${pm10Cls.bg} ${pm10Cls.border}`}
               aria-label={`미세먼지 ${pm10Level}`}
             >
               <span className="text-[0.95rem] text-gray-500 dark:text-gray-300">미세먼지</span>
               <b className={`text-[0.95rem] font-semibold ${pm10Cls.text}`}>{pm10Level}</b>
             </div>
-
             <div
               className={`inline-flex h-[3.333rem] items-center gap-[0.5rem] rounded-xl border px-3 py-2 ${pm25Cls.bg} ${pm25Cls.border}`}
               aria-label={`초미세먼지 ${pm25Level}`}
@@ -188,16 +174,12 @@ export default function Header() {
           </div>
         </div>
 
-        {/* 우측 버튼 */}
-      <nav className="flex items-center gap-[0.667rem]">
-        {/* ===== 다크/라이트 모드 버튼 (rem 단위로 수정됨) ===== */}
-       <button
-              className="
-                flex h-[3.333rem] items-center justify-center gap-[0.1875rem] rounded-md border border-[#EEE] bg-white px-[0.8125rem]
-                text-gray-700 hover:bg-gray-50
-                active:scale-95
-                dark:border-[#222] dark:bg-[#272829] dark:text-gray-200 dark:hover:bg-[#333]
-              "
+        {/* 우측: 테마/로그아웃 */}
+        <nav className="flex items-center gap-[0.667rem]">
+          {/* ✅ 테마 의존 UI는 mounted 이후에만 렌더 */}
+          {mounted && (
+            <button
+              className="flex h-[3.333rem] items-center justify-center gap-[0.1875rem] rounded-md border border-[#EEE] bg-white px-[0.8125rem] text-gray-700 hover:bg-gray-50 active:scale-95 dark:border-[#222] dark:bg-[#272829] dark:text-gray-200 dark:hover:bg-[#333]"
               type="button"
               onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
               aria-label={resolvedTheme === "dark" ? "라이트 모드로 전환" : "다크 모드로 전환"}
@@ -205,8 +187,8 @@ export default function Header() {
               <Image
                 src={resolvedTheme === "dark" ? "/images/icon/lightmode.png" : "/images/icon/darkmode.png"}
                 alt={resolvedTheme === "dark" ? "라이트 모드" : "다크 모드"}
-                width={12}
-                height={12}
+                width={16}
+                height={16}
                 className="h-[1rem] w-[1rem] object-contain"
                 priority
               />
@@ -214,23 +196,16 @@ export default function Header() {
                 {resolvedTheme === "dark" ? "라이트 모드" : "다크 모드"}
               </span>
             </button>
+          )}
 
-        {/* ===== 로그아웃 버튼 (기존 코드 유지) ===== */}
           <button
-        className="
-          inline-flex h-[3.333rem] items-center justify-center gap-[0.625rem] rounded-md border border-[#EEE] bg-white px-[0.625rem]
-          font-normal leading-normal text-[#999] hover:bg-gray-50
-          active:scale-95
-          dark:border-[#222] dark:bg-[#272829] dark:text-gray-400 dark:hover:bg-[#333]
-        "
-        type="button"
-      >
-        로그아웃
-      </button>
-      </nav>
+            className="inline-flex h-[3.333rem] items-center justify-center gap-[0.625rem] rounded-md border border-[#EEE] bg-white px-[0.625rem] font-normal leading-normal text-[#999] hover:bg-gray-50 active:scale-95 dark:border-[#222] dark:bg-[#272829] dark:text-gray-400 dark:hover:bg-[#333]"
+            type="button"
+          >
+            로그아웃
+          </button>
+        </nav>
       </div>
     </header>
   );
 }
-
-

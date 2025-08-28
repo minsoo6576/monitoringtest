@@ -5,11 +5,16 @@ import { useEffect, useId } from "react";
 declare global {
   interface Window {
     vw?: any;
-    __VWORLD_3D_STARTED?: boolean; // ⬅ 전역 가드
+    __VWORLD_3D_STARTED?: boolean; // ⬅ 전역 가드(중복 init 방지)
     viewer?: any;                  // (VWorld 내부에서 잡는 전역)
   }
 }
 
+/**
+ * VWorld 3D 지도 컴포넌트
+ * - 중복 초기화를 안전하게 가드
+ * - 마우스 드래그/휠/더블클릭 등 인터랙션 활성화를 위해 NavigationControl 추가
+ */
 export default function VWorld3DMap() {
   const mapId = useId().replace(/:/g, "_");
   const apiKey = process.env.NEXT_PUBLIC_VWORLD_API_KEY as string;
@@ -55,6 +60,21 @@ export default function VWorld3DMap() {
       );
       map.setLogoVisible(true);
       map.setNavigationZoomVisible(true);
+
+      // ✅ 마우스 인터랙션 활성화: NavigationControl 부착
+      //    - 드래그로 이동/회전, 휠 줌, 더블클릭 줌 등
+      try {
+        const navCtrl = new vw.NavigationControl(map);
+        // 일부 프로젝트에서 메서드 존재 유무가 다를 수 있어 안전하게 체크
+        navCtrl?.setEnable?.(true);
+        navCtrl?.setWheelZoom?.(true);
+        navCtrl?.setDragPan?.(true);
+        navCtrl?.setDragRotate?.(true);
+        navCtrl?.setDblClickZoom?.(true);
+        map.addControl?.(navCtrl);
+      } catch (e) {
+        console.warn("[VWorld] NavigationControl attach failed (fallback to default interactions)", e);
+      }
 
       // ✅ 여기서 “이미 시작” 표시
       window.__VWORLD_3D_STARTED = true;

@@ -63,7 +63,7 @@ export default function RightSidebar({
       {/* 오른쪽 고정 패널 */}
       <aside
         className={`fixed right-0 z-50 bg-white transition-transform duration-300 will-change-transform
-                    ${isOpen ? "translate-x-0" : "translate-x-full"}
+                    ${isOpen ? " " : "translate-x-full"}
                     dark:bg-[#1E1E20] border-0 ring-0 shadow-none outline-none`}
         style={{
           top: `${topOffsetRem}rem`,

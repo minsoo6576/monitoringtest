@@ -49,7 +49,7 @@ export default function BottomSidebar({
       {/* 패널 */}
       <aside
         className={`fixed bottom-0 z-40 bg-white transition-transform duration-300 will-change-transform
-                    ${isOpen ? "translate-y-0" : "translate-y-full"}
+                    ${isOpen ? "" : "translate-y-full"}
                     transition-[left,right,transform] dark:bg-[#1E1E20]`}
         style={{
           height: `${resolvedHeightRem}rem`,
