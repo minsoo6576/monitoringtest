@@ -76,7 +76,7 @@ export default function EachFieldChart({
             content={
               <ChartTooltipContent
                 hideLabel
-                className="w-[220px] h-[100x]"
+                className="w-[220px]"
                 formatter={(value, name, item, index) => (
                   <>
                     <div
