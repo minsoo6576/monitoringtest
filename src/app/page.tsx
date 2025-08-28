@@ -1,3 +1,4 @@
+// src/app/page.tsx (또는 PageLayout.tsx 위치에 맞게)
 "use client";
 
 import { useState } from "react";
@@ -10,7 +11,7 @@ import MainContainer from "@/components/MainContainer";
 export default function PageLayout({ children }: { children: React.ReactNode }) {
   const [leftOpen, setLeftOpen] = useState(true);
   const [rightOpen, setRightOpen] = useState(true);
-  const [bottomOpen, setBottomOpen] = useState(false);
+  const [bottomOpen, setBottomOpen] = useState(true);
 
   /** ========= Layout Tokens (root 12px 기준) =========
    * LeftSidebar: w-[28rem]
@@ -49,20 +50,15 @@ export default function PageLayout({ children }: { children: React.ReactNode }) 
 
           {/* 본문 */}
           <div className="relative flex-1 overflow-hidden">
-
-        <MainContainer
-          leftPad={0}
-          rightPad={0}
-          bottomPad={bottomOpen ? BOTTOM_H_PX : 0}
-          headerOffsetPx={0}              // ✅ 부모가 이미 헤더만큼 높이 뺐음
-          // bgSrc/objectPosition 넘겨도 되지만 현재 계산엔 미사용
-          // objectPosition="center"
-          // 디버그: 지도를 위로 띄워서 덮임 여부 확인
-          mapZ={0}                        // 필요시 30으로 올려서 테스트
-        >
-          {children}
-        </MainContainer>
-
+            <MainContainer 
+              leftPad={0}
+              rightPad={0}
+              bottomPad={bottomOpen ? BOTTOM_H_PX : 0}
+              headerOffsetPx={0}         
+              renderMarkerPanel
+            >
+              {children}
+            </MainContainer>
           </div>
 
           {/* 우측 스페이서 (RightSidebar 가시 영역 폭과 동일) */}

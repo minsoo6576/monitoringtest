@@ -6,8 +6,6 @@ import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
-import logo from "@/public/Logo.png";
-
 type AQIKind = "pm10" | "pm25";
 
 function getLevel(kind: AQIKind, v: number) {
@@ -21,21 +19,20 @@ function getLevel(kind: AQIKind, v: number) {
 function levelClasses(level: "좋음" | "보통" | "나쁨" | "매우나쁨") {
   switch (level) {
     case "좋음":
-      return { text: "text-[#2F7CFF]", bg: "bg-[#F3F8FF]", border: "border-none" };
+      return { text: "text-[#2F7CFF]", bg: "bg-[#F3F8FF]", border: "border-0" };
     case "보통":
-      return { text: "text-[#16A34A]", bg: "bg-[#ECFFED]", border: "border-none" };
+      return { text: "text-[#16A34A]", bg: "bg-[#ECFFED]", border: "border-0" };
     case "나쁨":
-      return { text: "text-[#D97706]", bg: "bg-[#FFFBF6]", border: "border-none" };
+      return { text: "text-[#D97706]", bg: "bg-[#FFFBF6]", border: "border-0" };
     case "매우나쁨":
     default:
-      return { text: "text-[#DC2626]", bg: "bg-[#FFF8F8]", border: "border-none" };
+      return { text: "text-[#DC2626]", bg: "bg-[#FFF8F8]", border: "border-0" };
   }
 }
 
 export default function Header() {
   const { resolvedTheme, setTheme } = useTheme();
 
-  // ✅ SSR/CSR 불일치 방지
   const [mounted, setMounted] = useState(false);
   const [currentTime, setCurrentTime] = useState({ date: "", time: "" });
 
@@ -48,7 +45,7 @@ export default function Header() {
     });
   }, []);
 
-  // 데모 날씨 데이터 (시간/날짜는 위 상태 사용)
+  // 데모 날씨 데이터
   const weatherIcons: Record<string, string> = {
     맑음: "/images/weathericon/sunny.png",
     구름조금: "/images/weathericon/partly-cloudy.png",
@@ -88,31 +85,30 @@ export default function Header() {
         dark:bg-[#1E1E20] dark:border-[#222]
       "
     >
-      <div className="flex h-[6.667rem] items-center gap-x-[12.5rem] px-[2rem]">
+      <div className="flex h-[6.667rem] items-center gap-x-[16.5rem] px-[2rem]">
         {/* 좌: 로고 */}
         <Link href="/" className="flex items-center">
           <div className="relative w-40 h-10">
-           <Image
-  src="/logo.png"   // import 하지 말고, public 루트 기준 경로만!
-  alt="관제 로고"
-  fill
-  sizes="160px"
-  priority
-/>
-
+            <Image
+              src="/logo.png"
+              alt="관제 로고"
+              fill
+              sizes="160px"
+              priority
+            />
           </div>
         </Link>
 
         {/* 가운데: 날짜/날씨/지표 */}
-        <div className="flex-1 grid grid-cols-[auto_auto_1fr] items-center gap-[3.333rem] text-gray-800 dark:text-gray-200">
-          {/* 날짜/시간 (클라에서만 만든 값 표시) */}
-          <div className="text-[1.083rem] leading-none" suppressHydrationWarning>
+        <div className="flex-1 grid grid-cols-[auto_auto_1fr] items-center gap-x-0 text-gray-800 dark:text-gray-200">
+          {/* 날짜/시간 */}
+          <div className="text-[1.333rem] leading-none" suppressHydrationWarning>
             <span className="mr-3">{weather.date}</span>
             <span className="font-semibold">{weather.time}</span>
           </div>
 
-          {/* 날씨 */}
-          <div className="flex items-center gap-[1rem]">
+          {/* 날씨 (시간과의 간격 30px) */}
+          <div className="flex items-center gap-[1rem] ml-[30px]">
             <div className="flex items-center gap-[0.667rem]">
               <Image
                 src={weatherIcons[weather.conditionKo] ?? fallbackIcon}
@@ -155,8 +151,8 @@ export default function Header() {
             </div>
           </div>
 
-          {/* 미세먼지/초미세먼지 */}
-          <div className="flex items-center gap-[0.667rem]">
+          {/* 미세먼지/초미세먼지 (날씨 블록과의 간격 1rem) */}
+          <div className="flex items-center gap-[0.667rem] ml-[1rem]">
             <div
               className={`inline-flex h-[3.333rem] items-center gap-[0.5rem] rounded-xl border px-3 py-2 ${pm10Cls.bg} ${pm10Cls.border}`}
               aria-label={`미세먼지 ${pm10Level}`}
@@ -176,7 +172,6 @@ export default function Header() {
 
         {/* 우측: 테마/로그아웃 */}
         <nav className="flex items-center gap-[0.667rem]">
-          {/* ✅ 테마 의존 UI는 mounted 이후에만 렌더 */}
           {mounted && (
             <button
               className="flex h-[3.333rem] items-center justify-center gap-[0.1875rem] rounded-md border border-[#EEE] bg-white px-[0.8125rem] text-gray-700 hover:bg-gray-50 active:scale-95 dark:border-[#222] dark:bg-[#272829] dark:text-gray-200 dark:hover:bg-[#333]"

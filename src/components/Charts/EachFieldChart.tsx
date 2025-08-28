@@ -10,22 +10,22 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-type DataItem = { region: string; running: number; swimming: number };
+type DataItem = { region: string; open: number; close: number };
 
 const chartData: DataItem[] = [
-  { region: "수성구", running: 1, swimming: 3 },
-  { region: "북구",   running: 3, swimming: 4 },
-  { region: "중구",   running: 5, swimming: 1 },
-  { region: "동구",   running: 1, swimming: 5 },
-  { region: "남구",   running: 6, swimming: 3 },
-  { region: "서구",   running: 4, swimming: 4 },
-  { region: "달서구", running: 5, swimming: 3 },
-  { region: "달성군", running: 1, swimming: 1 },
+  { region: "수성구", open: 1, close: 3 },
+  { region: "북구",   open: 3, close: 4 },
+  { region: "중구",   open: 5, close: 1 },
+  { region: "동구",   open: 1, close: 5 },
+  { region: "남구",   open: 6, close: 3 },
+  { region: "서구",   open: 4, close: 4 },
+  { region: "달서구", open: 5, close: 3 },
+  { region: "달성군", open: 1, close: 1 },
 ];
 
 const chartConfig = {
-  running:  { label: "Running",  color: "#026CF3" },
-  swimming: { label: "Swimming", color: "#e4ecf8ff" },
+  open:  { label: "활성 현장",   color: "#026CF3" },
+  close: { label: "비활성 현장", color: "#e4ecf8ff" },
 } satisfies ChartConfig;
 
 export default function EachFieldChart({
@@ -48,7 +48,6 @@ export default function EachFieldChart({
 
   return (
     <div className={`min-w-0 shrink-0 ${className}`} style={style}>
-      {/* ChartContainer는 부모 크기를 100%로 따라감 */}
       <ChartContainer config={chartConfig} className="w-full h-full text-[1rem]">
         <BarChart accessibilityLayer data={data}>
           <XAxis
@@ -59,15 +58,15 @@ export default function EachFieldChart({
           />
 
           <Bar
-            dataKey="running"
+            dataKey="open"
             stackId="a"
-            fill="var(--color-running)"
+            fill="var(--color-open)"
             radius={[0, 0, 4, 4]}
           />
           <Bar
-            dataKey="swimming"
+            dataKey="close"
             stackId="a"
-            fill="var(--color-swimming)"
+            fill="var(--color-close)"
             radius={[4, 4, 0, 0]}
           />
 
@@ -77,7 +76,7 @@ export default function EachFieldChart({
             content={
               <ChartTooltipContent
                 hideLabel
-                className="w-[180px]"
+                className="w-[220px] h-[100x]"
                 formatter={(value, name, item, index) => (
                   <>
                     <div
@@ -91,15 +90,15 @@ export default function EachFieldChart({
                     {chartConfig[name as keyof typeof chartConfig]?.label ?? name}
                     <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums">
                       {value}
-                      <span className="text-muted-foreground font-normal">kcal</span>
+                      <span className="text-muted-foreground font-normal">개</span>
                     </div>
 
                     {index === 1 && (
                       <div className="text-foreground mt-1.5 flex basis-full items-center border-t pt-1.5 text-xs font-medium">
-                        Total
+                        총 현장
                         <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums">
-                          {item.payload.running + item.payload.swimming}
-                          <span className="text-muted-foreground font-normal">kcal</span>
+                          {item.payload.open + item.payload.close}
+                          <span className="text-muted-foreground font-normal">개</span>
                         </div>
                       </div>
                     )}

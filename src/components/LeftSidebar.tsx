@@ -1,7 +1,8 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FieldListGroup, FieldListProps } from "@/components/FieldLists/FieldList";
-import {ScrollArea} from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import LeftToggleButton from "@/components/ToggleButton/LeftToggleButton";
 
 const FIELDS: FieldListProps[] = [
   {
@@ -88,6 +89,8 @@ type LeftSidebarProps = {
 };
 
 export default function LeftSidebar({ isOpen, onToggle }: LeftSidebarProps) {
+  const [hoveringPanel, setHoveringPanel] = useState(false);
+
   useEffect(() => {
     if (!isOpen) return;
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && onToggle();
@@ -95,50 +98,37 @@ export default function LeftSidebar({ isOpen, onToggle }: LeftSidebarProps) {
     return () => window.removeEventListener("keydown", onKey);
   }, [isOpen, onToggle]);
 
+  const PANEL_W_REM = 28;
+  const HEADER_REM = 6.667;
+
   return (
     <>
       {/* 사이드바 패널 */}
-   <aside
-   className={`fixed left-0 top-[6.667rem] pb-[1.667rem] z-40 h-[calc(100vh-6.667rem)] w-[28rem] bg-white
-   transition-transform duration-300 will-change-transform
-   ${isOpen ? " " : "-translate-x-full"}
-   dark:bg-[#1E1E20] !border-0 !ring-0 !shadow-none !outline-none`}>
-    <ScrollArea className="h-full w-full">
-        <div className="h-full overflow-y-auto px-[1.333rem] text-gray-900 dark:text-gray-100">
-          {/* 내부 카드류는 FieldListGroup 쪽에서 dark:bg-[#272829] / dark:border-[#222]로 처리 */}
-          <FieldListGroup items={FIELDS} />
-        </div>
-      </ScrollArea>
-   </aside>
-
-      {/* 토글 버튼 (카드 팔레트 적용) */}
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-label={isOpen ? "왼쪽 메뉴 닫기" : "왼쪽 메뉴 열기"}
-        className={`fixed z-50 top-[calc(50vh+3.333rem)] -translate-y-1/2
-                    transition-[left,transform] duration-300
-                    ${isOpen ? "left-[23.333rem]" : "left-0"}
-                    flex h-[4rem] w-[2.667rem] items-center justify-center
-                    rounded-r-full border shadow active:scale-95
-                    border-gray-200 bg-white text-gray-700 hover:bg-gray-50
-                    dark:border-[#222] dark:bg-[#272829] dark:text-gray-100 dark:hover:bg-[#2f3032]`}
+      <aside
+        className={`fixed left-0 top-[${HEADER_REM}rem] pb-[1.667rem] z-40 h-[calc(100vh-${HEADER_REM}rem)] w-[${PANEL_W_REM}rem] bg-white
+                    transition-transform duration-300 will-change-transform
+                    ${isOpen ? "" : "-translate-x-full"}
+                    dark:bg-[#1E1E20] !border-0 !ring-0 !shadow-none !outline-none`}
+        onMouseEnter={() => setHoveringPanel(true)}
+        onMouseLeave={() => setHoveringPanel(false)}
       >
-        <svg
-          viewBox="0 0 24 24"
-          className={`h-[1.667rem] w-[1.667rem] transition-transform ${isOpen ? "" : "rotate-180"}`}
-          aria-hidden="true"
-        >
-          <path
-            d="M15 6l-6 6 6 6"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </button>
+        <ScrollArea className="h-full w-full">
+          <div className="h-full overflow-y-auto px-[1.333rem] text-gray-900 dark:text-gray-100">
+            <FieldListGroup items={FIELDS} />
+          </div>
+        </ScrollArea>
+      </aside>
+
+      {/* ▶ 토글 버튼 (바텀/오른쪽과 동일 UX) */}
+      <LeftToggleButton
+        isOpen={isOpen}
+        onToggle={onToggle}
+        leftRemWhenOpen={PANEL_W_REM}
+        top={`calc(50vh + ${HEADER_REM / 2}rem)`} // 기존 top과 동일 위치
+        holdVisible={hoveringPanel}
+        // inactiveMs={5000}
+        // zoneRatioX={0.2}
+      />
     </>
   );
 }

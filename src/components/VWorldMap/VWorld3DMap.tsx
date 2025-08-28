@@ -1,31 +1,45 @@
 // src/components/VWorldMap/VWorld3DMap.tsx
 "use client";
+
 import { useEffect, useId } from "react";
 
 declare global {
   interface Window {
     vw?: any;
-    __VWORLD_3D_STARTED?: boolean; // ⬅ 전역 가드(중복 init 방지)
-    viewer?: any;                  // (VWorld 내부에서 잡는 전역)
+    __VWORLD_3D_STARTED?: boolean;
+    __VWORLD_MAP__?: any;
+    viewer?: any;
   }
 }
 
-/**
- * VWorld 3D 지도 컴포넌트
- * - 중복 초기화를 안전하게 가드
- * - 마우스 드래그/휠/더블클릭 등 인터랙션 활성화를 위해 NavigationControl 추가
- */
 export default function VWorld3DMap() {
   const mapId = useId().replace(/:/g, "_");
-  const apiKey = process.env.NEXT_PUBLIC_VWORLD_API_KEY as string;
 
   useEffect(() => {
-    if (typeof window === "undefined" || !apiKey) return;
+   // ✅ 언제든 accessor 보장 (이미 시작돼 있어도 브릿지 깔기)
+   const ensureAccessor = () => {
+     if (!(window as any).vw) return;
+     if (!(window as any).vw.getCurrentMap) {
+       (window as any).vw.getCurrentMap = () => (window as any).__VWORLD_MAP__ ?? null;
+     }
+   };
+   ensureAccessor();
 
-    // ✅ 중복 방지: 이미 시작했으면 두 번째 init 스킵
+    if (typeof window === "undefined") return;
+
+    // 이미 시작된 경우 두 번째 init 스킵
     if (window.__VWORLD_3D_STARTED) {
-      console.warn("[VWorld] already started, skip duplicate init");
-      return;
+     console.warn("[VWorld] already started, wiring accessor only");
+     // ⚠ 이미 시작되어도 __VWORLD_MAP__이 없을 수 있으니 가볍게 폴링해 채움
+     let raf = 0;
+     const pump = () => {
+       ensureAccessor();
+       // 다른 곳에서 map을 노출했다면 여기서 잡힘
+       if ((window as any).__VWORLD_MAP__) return;
+       raf = requestAnimationFrame(pump);
+     };
+     pump();
+    return;
     }
 
     function waitForContainerAndInit() {
@@ -41,31 +55,33 @@ export default function VWorld3DMap() {
 
     function init3D() {
       const { vw } = window;
-      if (!vw?.Map) { requestAnimationFrame(init3D); return; }
+      if (!vw?.Map) {
+        requestAnimationFrame(init3D);
+        return;
+      }
 
       const el = document.getElementById(mapId);
       if (el) el.innerHTML = ""; // HMR 중복 캔버스 제거
 
-      // ✅ 최종 초기화 직전에 다시 한 번 가드(동시성 대비)
       if (window.__VWORLD_3D_STARTED) return;
 
       const map = new vw.Map();
       map.setOption({ mapId, logo: true, navigation: true });
       map.setMapId(mapId);
+
+      // ✅ 전역 accessor/인스턴스 노출
+      (window as any).__VWORLD_MAP__ = map;
++     ensureAccessor();
+
       map.setInitPosition(
         new vw.CameraPosition(
-          new vw.CoordZ(127.425, 38.196, 1548700),
+          new vw.CoordZ(128.6014, 35.8650, 20000),
           new vw.Direction(0, -90, 0)
         )
       );
-      map.setLogoVisible(true);
-      map.setNavigationZoomVisible(true);
 
-      // ✅ 마우스 인터랙션 활성화: NavigationControl 부착
-      //    - 드래그로 이동/회전, 휠 줌, 더블클릭 줌 등
       try {
         const navCtrl = new vw.NavigationControl(map);
-        // 일부 프로젝트에서 메서드 존재 유무가 다를 수 있어 안전하게 체크
         navCtrl?.setEnable?.(true);
         navCtrl?.setWheelZoom?.(true);
         navCtrl?.setDragPan?.(true);
@@ -73,20 +89,15 @@ export default function VWorld3DMap() {
         navCtrl?.setDblClickZoom?.(true);
         map.addControl?.(navCtrl);
       } catch (e) {
-        console.warn("[VWorld] NavigationControl attach failed (fallback to default interactions)", e);
+        console.warn("[VWorld] NavigationControl attach failed", e);
       }
 
-      // ✅ 여기서 “이미 시작” 표시
       window.__VWORLD_3D_STARTED = true;
-
       map.start();
-
-      const r = el?.getBoundingClientRect();
-      console.log("[VWorld] started", { w: r?.width, h: r?.height });
     }
 
     waitForContainerAndInit();
-  }, [apiKey, mapId]);
+  }, [mapId]);
 
   return <div id={mapId} style={{ width: "100%", height: "100%" }} />;
 }

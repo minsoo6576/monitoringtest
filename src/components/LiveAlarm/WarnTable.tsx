@@ -8,7 +8,7 @@ export type DangerItem = { text: string; time?: string; tone?: Tone };
 function Chip({ tone = "danger", children }: { tone?: Tone; children: React.ReactNode }) {
   const map: Record<Tone, string> = {
     warn: "bg-[#FFF6ED] text-[#FF8B17]",
-    danger: "bg--[#FFEFEF] text-[#FF1717]",
+    danger: "bg-[#FFEFEF] text-[#FF1717]",
   };
   return (
     <span className={`inline-flex items-center rounded px-[0.5rem] py-[0.167rem] text-[1rem] font-medium ${map[tone]}`}>
@@ -39,7 +39,7 @@ export default function DangerTable({ items }: { items: DangerItem[] }) {
               <TableCell
                 className={`px-[0.833rem] pb-[0.667rem] group-last:pb-0 ${i === 0 ? "pt-0" : "pt-[0.667rem]"}`}
               >
-                <div className="min-w-0 truncate">{n.text}</div>
+                <div className="w-60 truncate ">{n.text}</div>
               </TableCell>
 
               <TableCell

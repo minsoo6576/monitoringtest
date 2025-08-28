@@ -14,13 +14,12 @@ const HEADER_H = "6.667rem";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const apiKey = process.env.NEXT_PUBLIC_VWORLD_API_KEY ?? "";
-  // ✅ SSR/CSR 불일치 막으려고 env만 사용 (없으면 고정값)
   const domain = process.env.NEXT_PUBLIC_VWORLD_DOMAIN ?? "localhost:3000";
 
   return (
     <html lang="ko" className="h-full" suppressHydrationWarning>
       <head>
-        {/* 1) document.write 순차 로더 (1회만 패치 + 중복 방지 + 순서 보장) */}
+        {/* ✅ document.write 패치 (중복 방지 포함) */}
         <Script id="patch-document-write" strategy="beforeInteractive">
           {`
             (function(){
@@ -77,7 +76,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                       enqueue('style', orig.href);
                     });
 
-                    return; // 원래 스트림 쓰기 방지
+                    return; // 원래 document.write로 DOM에 직접 쓰는 행위 방지
                   }
                 } catch(e){
                   console.warn('[VWorld] document.write shim warning:', e);
@@ -88,7 +87,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           `}
         </Script>
 
-        {/* 2) VWorld WebGL 3.0 메인 스크립트 (반드시 1개만) */}
+        {/* ✅ VWorld 메인 스크립트 (문서 파싱 전에 동기 로드) */}
         {apiKey && (
           <Script
             id="vworld-webgl3"

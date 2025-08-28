@@ -21,12 +21,10 @@ export default function NoticeTable({ items }: { items: NoticeItem[] }) {
           items.slice(0, 4).map((n, i) => (
             <TableRow key={i} className="group align-middle text-[1rem]">
               {/* 텍스트 */}
-              <TableCell className="p-0">
-                <div
-                  className={`min-w-0 h-full box-border flex items-center px-[0.833rem] pt-[0.667rem] pb-[0.667rem] group-first:pt-0 group-last:pb-0`}
-                >
-                  <span className="truncate">{n.text}</span>
-                </div>
+             <TableCell
+                className={`px-[0.833rem] pb-[0.667rem] group-last:pb-0 ${i === 0 ? "pt-0" : "pt-[0.667rem]"}`}
+              >
+                <div className="w-60 truncate ">{n.text}</div>
               </TableCell>
 
               {/* 시간 */}

@@ -9,8 +9,8 @@ export type NoticeWarnItem = { location?: string; text: string; time?: string; t
 
 function Chip({ tone = "warn", children }: { tone?: Tone; children: React.ReactNode }) {
   const map: Record<Tone, string> = {
-    warn: "bg-[#FFF6ED] text-[#FF8B17]",
-    danger: "bg--[#FFEFEF] text-[#FF1717]",
+  warn: "bg-[#FFF6ED] text-[#FF8B17]",
+    danger: "bg-[#FFEFEF] text-[#FF1717]",
   };
   return (
     <span className={`inline-flex items-center rounded px-[0.5rem] py-[0.167rem] text-[1rem] font-medium ${map[tone]}`}>
@@ -41,7 +41,11 @@ export default function NoticeWarnTable({ items }: { items: NoticeWarnItem[] }) 
             <TableCell className="text-left text-[1rem] text-[#3A4451] not-italic font-semibold leading-[1] px-[0.5rem] pb-[0.667rem]">
               {n.location ?? "-"}
             </TableCell>
-            <TableCell className="text-[1rem] font-normal not-italic px-[2.5rem] leading-[1]">{n.text}</TableCell>
+            <TableCell
+                className={`text-[1rem] px-[0.833rem] pb-[0.667rem] group-last:pb-0 ${i === 0 ? "pt-0" : "pt-[0.667rem]"}`}
+              >
+                <div className="w-60 truncate ">{n.text}</div>
+              </TableCell>
             <TableCell className="text-right text-[1rem] text-[#999] font-normal not leading-[1] whitespace-nowrap px-[1.833rem] pb-[0.667rem]">
               {n.time ?? "-"}
             </TableCell>
